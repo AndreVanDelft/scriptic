@@ -1,0 +1,126 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import static scriptic.util.Scripts.*;
+
+public class LookupFrame2 extends JFrame {
+    JTextField searchTF;
+    JTextArea outputTA;
+    JButton searchButton;
+    JButton exitButton;
+    JButton cancelButton;
+    JLabel searchLabel;
+    JPanel topPanel;
+
+    public LookupFrame2() {
+        initComponents();
+     }
+
+    
+    private void initComponents() {
+        getContentPane().setLayout(new BorderLayout());
+
+        searchTF     = new JTextField();
+        outputTA     = new JTextArea();
+        searchButton = new JButton("Go");
+        exitButton   = new JButton("Exit");
+        cancelButton = new JButton("Cancel");
+        searchLabel  = new JLabel("Search");
+
+        outputTA    .setEditable(false);
+        searchButton.setEnabled (false);
+        exitButton  .setEnabled (false);
+        cancelButton.setEnabled (false);
+        searchLabel .setPreferredSize(new Dimension(45, 26));
+        searchTF    .setPreferredSize(new Dimension(100, 26));
+
+        topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topPanel.add(searchLabel);
+        topPanel.add(searchTF);
+        topPanel.add(searchButton);
+        topPanel.add(cancelButton);
+        topPanel.add(exitButton);
+
+        getContentPane().add(topPanel, BorderLayout.NORTH);
+        getContentPane().add(outputTA, BorderLayout.CENTER);
+
+        setLocation(200,200);
+        setSize(400,300);
+
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    }
+
+    String[] results;
+
+    private void showCanceledText() {
+        outputTA.setText("Search canceled");
+    }
+    private void showSearchingText() {
+        outputTA.setText("Searching for: " + searchTF.getText());
+    }
+    private void showSearchResults() {
+        outputTA.setText("");
+        for (int i = 0; i < results.length; i++) {
+            String result = results[i];
+            outputTA.setText(outputTA.getText() + '\n' + result);
+        }
+    }
+
+    // search for searchTF.getText() 
+    // mimic the server call delay...
+    public void searchInDatabase() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e){
+            return;
+        }
+        results = new String[]{"Book one", "Book two", "Book three"};
+    }
+
+
+    //////////////////////////////////////////////
+    // confirm exit dialog
+    //////////////////////////////////////////////
+    public boolean confirmExit() {
+      return JOptionPane.OK_OPTION
+          == JOptionPane.showConfirmDialog(this,
+               "Are you sure", "Click OK to exit", JOptionPane.OK_CANCEL_OPTION);
+    }
+
+    //////////////////////////////////////////////
+    public static scripts
+    //////////////////////////////////////////////
+    
+        main(String args[]) = LookupFrame2 f = new LookupFrame2(): 
+                                @swing: {f.setVisible(true)}
+                              < f.live  
+                              > @swing: {f.setVisible(false)}
+     
+    //////////////////////////////////////////////
+    public scripts
+    //////////////////////////////////////////////
+
+        searchCommand = action(searchButton) + vkey(searchTF, KeyEvent.VK_ENTER !)           
+        cancelCommand = action(cancelButton) + vkey(searchTF, KeyEvent.VK_ESCAPE!)
+        exitCommand   = action(  exitButton) + windowClosing(this)
+        
+        exit          =   exitCommand; @swing: while(!confirmExit())
+        cancelSearch  = cancelCommand; @swing: {showCanceledText()}
+          
+        whenSearchTextPresent = (..; anyUpdate(searchTF)); 
+                                {: searchTF.getText().trim().length()>0 ? :}
+                                
+        searchSequences   = ...; searchSequence
+        searchSequence    = whenSearchTextPresent; searchCommand; (searchAction / cancelSearch)
+        
+        searchAction      = showSearchingText;
+                            searchInDatabase;
+                            showSearchResults 
+
+        showSearchingText = @swing: {showSearchingText()}
+        showSearchResults = @swing: {showSearchResults()}
+        searchInDatabase  = {* searchInDatabase() *}
+                 
+        live    = searchSequences || exit
+                 
+}

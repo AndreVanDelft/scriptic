@@ -1,0 +1,197 @@
+/* This file is part of the Scriptic utility library.
+ * Copyright (C) 2009 Andre van Delft
+ *
+ * The Scriptic utility library is free software: 
+ * you can redistribute it and/or modify it under the terms
+ * of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+ package scriptic.util;
+
+import javax.swing.*;
+import javax.swing.text.*;
+import java.awt.event.*;
+import java.awt.*;
+
+import scriptic.vm.FromJava;
+
+public class Scripts {
+
+    public static SwingCodeInvoker swing = new SwingCodeInvoker();
+    
+    public static scripts
+
+        times(int n) = while(pass<n)
+    
+		action(JButton button) =
+		  ( AnchorActionListener a = new AnchorActionListener() : 
+			@swing: {button.addActionListener(a); button.setEnabled(true)}
+          < @a: {. .}
+          > @swing: {button.removeActionListener(a);
+                     if (button.getActionListeners().length==0) {button.setEnabled(false);}}
+          )
+					 
+		stateChange(JSlider slider) =
+		  ( AnchorChangeListener a = new AnchorChangeListener() : 
+			@swing: {slider.addChangeListener(a); slider.setEnabled(true)}
+		  < @a: {. .}
+		  > @swing: {slider.removeChangeListener(a);
+                     if (slider.getChangeListeners().length==0) {slider.setEnabled(false);}}
+		  )
+					 
+        caretPositionChanged(Component comp) =
+          ( AnchorInputMethodListener a = new AnchorInputMethodListener() : 
+            @swing: {comp.addInputMethodListener(a)}
+          < @a.caretPositionChanged: {. .}
+          > @swing: {comp.removeInputMethodListener(a)}
+          )
+                     
+        inputMethodTextChanged(Component comp) =
+          ( AnchorInputMethodListener a = new AnchorInputMethodListener() : 
+            @swing: {comp.addInputMethodListener(a)}
+          < @a.inputMethodTextChanged: {. .}
+          > @swing: {comp.removeInputMethodListener(a)}
+          )
+                     
+        changedUpdate(JTextComponent jTextComponent) = changedUpdate(jTextComponent.getDocument())
+         insertUpdate(JTextComponent jTextComponent) =  insertUpdate(jTextComponent.getDocument())
+         removeUpdate(JTextComponent jTextComponent) =  removeUpdate(jTextComponent.getDocument())
+            anyUpdate(JTextComponent jTextComponent) =     anyUpdate(jTextComponent.getDocument())
+                     
+        changedUpdate(Document document) =
+          ( AnchorDocumentListener a = new AnchorDocumentListener() : 
+            @swing: {document.addDocumentListener(a) }
+          < @a.changedUpdate: {. .}
+          > @swing: {document.removeDocumentListener(a)}
+          )
+                     
+        insertUpdate(Document document) =
+          ( AnchorDocumentListener a = new AnchorDocumentListener() : 
+            @swing: {document.addDocumentListener(a) }
+          < @a.insertUpdate: {.  .}
+          > @swing: {document.removeDocumentListener(a)}
+          )
+                     
+        removeUpdate(Document document) =
+          ( AnchorDocumentListener a = new AnchorDocumentListener() : 
+            @swing: {document.addDocumentListener(a) }
+          < @a.removeUpdate: {. .}
+          > @swing: {document.removeDocumentListener(a)}
+          )
+                     
+        anyUpdate(Document document) =
+          ( AnchorDocumentListener a = new AnchorDocumentListener() : 
+            @swing: {document.addDocumentListener(a) }
+          < @a.anyUpdate: {. .}
+          > @swing: {document.removeDocumentListener(a)}
+          )
+                     
+        textValueChanged(TextComponent comp) =
+          ( AnchorTextListener a = new AnchorTextListener() : 
+            @swing: {comp.addTextListener(a)}
+          < @a: {. .}
+          > @swing: {comp.removeTextListener(a)}
+          )
+                     
+        key(Component comp, char k) = 
+          ( AnchorKeyListener a = new AnchorKeyListener() : 
+            @swing: {comp.addKeyListener(a)}
+          < @a.pressed: {. k=a.pressed.event.getKeyChar(); k!!?? .}
+          > @swing: {comp.removeKeyListener(a)}
+          )
+          
+        vkey(Component comp, int k) = 
+          ( AnchorKeyListener a = new AnchorKeyListener() : 
+            @swing: {comp.addKeyListener(a)}
+          < @a.pressed: {. k=a.pressed.event.getKeyCode(); k!!?? .}
+          > @swing: {comp.removeKeyListener(a)}
+          )
+          
+        mousePress(Component comp, MouseEvent event) = 
+          ( AnchorMouseListener a = new AnchorMouseListener():
+            @swing    : {  comp.addMouseListener(a)}
+          < @a.pressed: {. event=a.pressed.event .}
+          > @swing    : {  comp.removeMouseListener(a)}
+          )
+
+        mouseDrag(Component comp, MouseEvent event) = 
+          ( AnchorMouseMotionListener a = new AnchorMouseMotionListener():
+            @swing    : {  comp.addMouseMotionListener(a)}
+          < @a.dragged: {. event=a.dragged.event .}
+          > @swing    : {  comp.removeMouseMotionListener(a)}
+          )
+          
+		gainFocus(Component comp) =
+		  ( AnchorFocusListener a = new AnchorFocusListener():
+            @swing     : {  comp.addFocusListener(a)}
+          < @a.gained  : {. .}
+          > @swing     : {  comp.removeFocusListener(a)}
+          )
+
+        loseFocus(Component comp) =
+          ( AnchorFocusListener a = new AnchorFocusListener():
+            @swing     : {  comp.addFocusListener(a)}
+          < @a.lost    : {. .}
+          > @swing     : {  comp.removeFocusListener(a)}
+          )
+
+        windowActivated(Window window) =
+          ( AnchorWindowListener a = new AnchorWindowListener():
+            @swing     : {  window.addWindowListener(a)}
+          < @a.activated : {. .}
+          > @swing     : {  window.removeWindowListener(a)}
+          )
+          
+        windowClosed(Window window) =
+          ( AnchorWindowListener a = new AnchorWindowListener():
+            @swing     : {  window.addWindowListener(a)}
+          < @a.closed : {. .}
+          > @swing     : {  window.removeWindowListener(a)}
+          )
+          
+        windowClosing(Window window) =
+          ( AnchorWindowListener a = new AnchorWindowListener():
+            @swing     : {  window.addWindowListener(a)}
+          < @a.closing : {. .}
+          > @swing     : {  window.removeWindowListener(a)}
+          )
+          
+        windowDeactivated(Window window) =
+          ( AnchorWindowListener a = new AnchorWindowListener():
+            @swing     : {  window.addWindowListener(a)}
+          < @a.deactivated : {. .}
+          > @swing     : {  window.removeWindowListener(a)}
+          )
+          
+        windowDeiconified(Window window) =
+          ( AnchorWindowListener a = new AnchorWindowListener():
+            @swing     : {  window.addWindowListener(a)}
+          < @a.deiconified : {. .}
+          > @swing     : {  window.removeWindowListener(a)}
+          )
+          
+        windowIconified(Window window) =
+          ( AnchorWindowListener a = new AnchorWindowListener():
+            @swing     : {  window.addWindowListener(a)}
+          < @a.iconified : {. .}
+          > @swing     : {  window.removeWindowListener(a)}
+          )
+          
+        windowOpened(Window window) =
+          ( AnchorWindowListener a = new AnchorWindowListener():
+            @swing     : {  window.addWindowListener(a)}
+          < @a.opened  : {. .}
+          > @swing     : {  window.removeWindowListener(a)}
+          )
+          
+}
