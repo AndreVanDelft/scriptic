@@ -1,0 +1,110 @@
+/************************************************************************/
+/* Simulation of a simple queuing system in Scriptic-Java               */
+/*                                                                      */
+/*                           +----------+                               */
+/*                         /-| Server 1 |-\                             */
+/*                        /  +----------+  \                            */
+/*                       /                  \                           */
+/*                      /    +----------+    \                          */
+/*                     /-----| Server 2 |-----\                         */
+/*                    /      +----------+      \                        */
+/*                   /                          \                       */
+/*     Customers    /        +----------+        \    Customers         */
+/*     --->--------<---------| Server 3 |--------->-------->---	        */
+/*     Enter        \        +----------+        /         Exit	        */
+/*                   \                          /                       */
+/*                    \      .............     /                        */
+/*                     \                      /                         */
+/*                      \    .............   /                          */
+/*                       \                  /                           */
+/*                        \  +----------+  /                            */
+/*                         \-| Server n |-/                             */
+/*                           +----------+                               */
+/*                                                                      */
+/* For a number of days customers enter a shop for service.             */
+/* They arrive according to a poisson distribution and then queue if	*/
+/* necessary; service times are negative exponentially distributed.     */
+/* After closing time no more customers are allowed to enter the shop.	*/
+/* The day completely ends when all customers in the shop have left.	*/
+/*                                                                      */
+/************************************************************************/
+
+import static java.lang.Math.*;
+import java.util.Random;
+import scriptic.vm.FromJava;
+
+public class QSim {
+
+  static String infotext = "  Simulation of a simple queueing system in Scriptic";
+
+  static boolean doTrace;
+  static void println(String s) {System.out.println(s);}
+  static void trace  (String s) {if(doTrace)println(timeStr()+s);}
+  
+  static final int MINUTE = 1;
+  static final int HOUR   = 60 * MINUTE;
+  static final int DAY    = 24 * HOUR;
+
+  /* display (elapsed) time in dd:hh:mm format */
+  static String format(String formatString, int i) {return String.format(formatString, new Object[]{new Integer(i)});}
+  static String timeStr() {return timeStr(FromJava.elapsedTime());} 
+  static String timeStr(double t) {
+	  int days    =  (int)t/DAY;
+	  int hours   = ((int)(t/HOUR))%(DAY/HOUR);
+	  int minutes = ((int)t)%HOUR;
+	  return format("%02d", days) + ":"
+      	   + format("%02d", hours) +":"
+           + format("%02d", minutes);
+  } 
+
+  QSim (String args[]) {
+    if (args.length>0) {
+       doTrace=true;
+    }
+    trace(infotext);
+  }
+
+  int    nCustomers; 
+  double qtime; /*total queueing times, including service times*/
+  Random random = new Random(0);
+
+  void report() {
+    println ("***********************************************************************");
+    println ("# customers          = " + nCustomers);
+    println ("total waiting time   = " + (int) qtime/MINUTE + " minutes");
+    println (" mean waiting time   = " + (nCustomers==0? 0: (int)qtime/nCustomers/MINUTE)
+                                       + " minutes");
+    println ("total simulated time = " + timeStr());
+    println ("***********************************************************************");
+  }
+  
+  double randomNegExp(double m) {return ((double)(-(m)*log(random.nextDouble())));}
+
+  public static scripts
+       main(String args[]) = QSim q=new QSim(args): q.live
+
+  scripts
+
+    waitTime   (double d) = {duration=d: }
+    minutes       (int i) = waitTime(i*MINUTE)
+    hours         (int i) = waitTime(i*HOUR)
+    times         (int n) = while(pass<n)
+    servers       (int n) = times(n) & server(pass+1)
+    server        (int i) = ...; serveCustomer(i)
+    theShopCloses         = {:trace("                       the shop closes"):}
+    theDayEnds(int i)     = {:trace("               Day "+i+" ends"); report():}
+    customerEnters(int i) = {:trace("          customer "+i+" enters");nCustomers++:}
+    customerLeaves(int i) = {:trace("          customer "+i+" leaves"):}
+    serveCustomer (int s) ,
+    getServed     (int c)>= {duration=randomNegExp(30*MINUTE):
+                             trace("-"+timeStr(FromJava.elapsedTime()+duration)
+                                 + " customer "+c+" is served by "+s)}
+    customer(int c)       = double dd=FromJava.elapsedTime()   : customerEnters(c); getServed(c);
+ 	                        {: qtime+=FromJava.elapsedTime()-dd:}; customerLeaves(c)
+    createCustomers       = ...; waitTime(randomNegExp(3*MINUTE)); <customer(pass)>
+    workingDay(int i)     = hours (9); createCustomers
+                         || hours(17); theShopCloses
+    day (int i)	          = workingDay(i) && hours(24); theDayEnds(i)
+    days(int n)           = times(n); day(pass)
+    live                  = days(5) || servers(10)
+}

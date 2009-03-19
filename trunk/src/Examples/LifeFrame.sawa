@@ -1,0 +1,145 @@
+/* Copyright (c) 1996, Delftware Technology BV. All rights reserved.
+ * Granted to use and modify this software as long as this copyright
+ * notice is retained.
+ */
+import static java.lang.Math.*;
+import static scriptic.util.Scripts.*;
+import scriptic.util.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.event.MouseEvent;
+
+public class LifeFrame extends BasicLifeFrame {
+
+    //////////////////////////////////////////////
+    // speed control
+    //////////////////////////////////////////////
+    int  minSpeed() {return speedSlider.getMinimum();}
+    int  maxSpeed() {return speedSlider.getMaximum();}
+    int  speed() {return speedSlider.getValue();}
+    void setSpeed(int s) {
+      speedLabel.setText ("Speed: " + s);
+      if (speedSlider.getValue() == s) {
+        return;
+      }  
+      speedSlider.setValue(s);  
+    }
+    int numKey2Speed(char c) {return c=='0'? maxSpeed():minSpeed()+c-'1';}
+    
+    int getSleep_ms() {return (int) pow(2, 12-speed());} // logarithmic scale
+    
+    public void sleep() { 
+      try {
+        int sleepPart_ms = 10;
+        for (int slept_ms = 0; slept_ms<getSleep_ms(); slept_ms += sleepPart_ms)
+        {
+          Thread.sleep(sleepPart_ms);
+        }
+      }
+      catch(InterruptedException e){}
+    }                    
+    //////////////////////////////////////////////
+    // confirm exit dialog
+    //////////////////////////////////////////////
+    public boolean confirmExit() {
+      return JOptionPane.OK_OPTION
+          == JOptionPane.showConfirmDialog(this,
+               "Are you sure?", "Click OK to exit", JOptionPane.OK_CANCEL_OPTION);
+	}
+                            
+
+    //////////////////////////////////////////////
+    public static script
+    //////////////////////////////////////////////
+    
+		main(String args[]) = LifeFrame f = new LifeFrame(): 
+							  @swing: {f.setVisible(true); f.setSpeed(f.speed())}
+						    < f.live  
+							> @swing: {f.setVisible(false)}
+		
+		
+    //////////////////////////////////////////////
+    public scripts
+    //////////////////////////////////////////////
+
+        key(char c) = key(this, c?!)
+
+            exitCmd = action(     exitButton) + key('x' !) + windowClosing(this)
+       randomizeCmd = action(randomizeButton) + key('r' !)
+           clearCmd = action(    clearButton) + key('c' !)
+            stepCmd = action(     stepButton) + key(' ' !)
+  multiStepStartCmd = action(    startButton) + key('\n'!)
+   multiStepStopCmd = action(     stopButton) + key('\n'!)
+
+    // the following would block the background activity during the confirmExit dialog:
+    //
+    // exit         =  exitCmd; @swing: while(!confirmExit())
+    // 
+    // The confirmExit dialog must run asynchronously in the swing thread:
+    
+      exit          =  exitCmd; 
+                       boolean  doExit: 
+                       @swing: {doExit = confirmExit()}; 
+                       while (! doExit)
+
+   canvasOperations = ...; ( (..;singleStep); multiStep || clear || randomize)
+
+      do1Step       = {*canvas.calculateGeneration()*}; @swing: {:canvas.repaint():}
+      
+      randomize     =      randomizeCmd;  @swing: {:canvas.doRandomize():}
+      clear         =          clearCmd;  @swing: {:canvas.doClear():}
+      singleStep    =           stepCmd; do1Step
+       multiStep    = multiStepStartCmd; 
+                      ( ...; do1Step; {*sleep()*}
+                      / multiStepStopCmd )
+
+    setSpeed(int s) = @swing: {:setSpeed(s):}
+
+      speedChanges  = ...; speedChange
+      speedChange   = speedKeyInput
+                    + speedButtonInput
+                    + speedSliderInput
+                    
+      speedKeyInput = char c: ( for(c='0'; c<='9'; c++) 
+                              + private c: key(c!); setSpeed(numKey2Speed(c)) )
+                              
+   speedButtonInput = if (speed()>minSpeed()) speedDecButton
+                    + if (speed()<maxSpeed()) speedIncButton
+    
+     speedDecButton = action(minSpeedButton); setSpeed(minSpeed())
+                    + action(  slowerButton); setSpeed(speed()-1)
+     
+     speedIncButton = action(maxSpeedButton); setSpeed(maxSpeed())
+                    + action(  fasterButton); setSpeed(speed()+1)
+     
+   speedSliderInput = stateChange(speedSlider); setSpeed(speedSlider.getValue())
+
+      mouseInput    = mousePressInput & mouseDragInput
+/*
+    mousePressInput = ( ...; MouseEvent me: mousePress(canvas, me?); {canvas.mouseDownToggle(me)} )
+    mouseDragInput  = ( ...; MouseEvent me: mouseDrag (canvas, me?); {canvas.mouseDragToggle(me)} )
+
+// as soon as lambda expressions are supported:
+//    mousePressInput = mousePresses  (canvas, {MouseEvent me => canvas.mouseDownToggle(me);})
+//    mouseDragInput  = mouseDraggings(canvas, {MouseEvent me => canvas.mouseDragToggle(me);})  
+/*/
+    mousePressInput = ( AnchorMouseListener a = new AnchorMouseListener():
+                        @swing    : {   canvas.addMouseListener(a)}
+                      < @a.pressed: {...canvas.mouseDownToggle(a.pressed.event)...}
+                      > @swing    : {   canvas.removeMouseListener(a)}
+                      )
+
+     mouseDragInput = ( AnchorMouseMotionListener a = new AnchorMouseMotionListener():
+                        @swing    : {   canvas.addMouseMotionListener(a)}
+                      < @a.dragged: {...canvas.mouseDragToggle(a.dragged.event)...}
+                      > @swing    : {   canvas.removeMouseMotionListener(a)}
+                      )
+/**/
+      live          = canvasOperations 
+                   || mouseInput 
+                   || speedChanges  
+                   || exit
+
+}
+
+

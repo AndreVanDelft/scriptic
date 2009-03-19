@@ -1,0 +1,92 @@
+import javax.swing.*;
+import java.awt.*;
+import static scriptic.util.Scripts.*;
+
+public class LookupFrame extends JFrame {
+    JTextField searchTF;
+    JTextArea outputTA;
+    JButton searchButton;
+    JLabel searchLabel;
+    JPanel topPanel;
+
+    public LookupFrame() {
+        initComponents();
+     }
+
+    
+    private void initComponents() {
+        getContentPane().setLayout(new BorderLayout());
+
+        searchTF     = new JTextField();
+        outputTA     = new JTextArea();
+        searchButton = new JButton("Go");
+        searchLabel  = new JLabel("Search");
+
+        outputTA    .setEditable(false);
+        searchButton.setEnabled (false);
+        searchLabel .setPreferredSize(new Dimension(45, 26));
+        searchTF    .setPreferredSize(new Dimension(100, 26));
+
+        topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topPanel.add(searchLabel);
+        topPanel.add(searchTF);
+        topPanel.add(searchButton);
+
+        getContentPane().add(topPanel, BorderLayout.NORTH);
+        getContentPane().add(outputTA, BorderLayout.CENTER);
+
+        setLocation(200,200);
+        setSize(300,300);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    String[] results;
+
+    private void showSearchingText() {
+        outputTA.setText("Searching for: " + searchTF.getText());
+    }
+    private void showSearchResults() {
+        outputTA.setText("");
+        for (int i = 0; i < results.length; i++) {
+            String result = results[i];
+            outputTA.setText(outputTA.getText() + '\n' + result);
+        }
+    }
+
+    // search for searchTF.getText() 
+    // mimic the server call delay...
+    public void searchInDatabase() {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e){
+            return;
+        }
+        results = new String[]{"Book one", "Book two", "Book three"};
+    }
+
+    //////////////////////////////////////////////
+    public static scripts
+    //////////////////////////////////////////////
+    
+        main(String args[]) = LookupFrame f = new LookupFrame(): 
+                              @swing: {f.setVisible(true)}
+                                     < f.live > 
+                              @swing: {f.setVisible(false)}
+     
+    //////////////////////////////////////////////
+    public scripts
+    //////////////////////////////////////////////
+    
+        live              = ...; searchSequence
+        
+        searchSequence    = searchCommand; 
+                            showSearchingText;
+                            searchInDatabase;
+                            showSearchResults 
+               
+        searchCommand     = action(searchButton)               
+        showSearchingText = @swing: {showSearchingText()}
+        showSearchResults = @swing: {showSearchResults()}
+        searchInDatabase  = {* searchInDatabase() *}
+}
