@@ -2,6 +2,7 @@
  * Granted to use and modify this software as long as this copyright
  * notice is retained.
  */
+package Examples;
 import static java.lang.Math.*;
 import static scriptic.util.Scripts.*;
 import scriptic.util.*;
