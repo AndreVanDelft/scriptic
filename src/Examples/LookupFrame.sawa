@@ -1,3 +1,4 @@
+package Examples;
 import javax.swing.*;
 import java.awt.*;
 import static scriptic.util.Scripts.*;
