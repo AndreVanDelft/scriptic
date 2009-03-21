@@ -7,7 +7,7 @@ You can compile and run Scriptic applications from Eclipse when you have checked
   * In Eclipse, start opening the Run Commands for editing
   * Add a command named "Compile Examples", in project Scriptic.
   * Main class is scriptic.tools.Sawa
-  * Specify as arguments: "-o ..\..\bin\ *.sawa"
+  * Specify as arguments: "-o ..\..\bin\ `*`.sawa"
   * For the class path, add the user entries Scriptic (the project), rt.jar (external jar from your local Java installation), and add folder \Scriptic\bin\Examples (using the Advanced... button)
 
 Now you should be able to compile all .sawa sources in Examples. To run your application, do for instance the following:
