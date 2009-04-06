@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
 <jardesc>
-    <jar path="C:/projects/eclipse/workspace/bin/sawa.jar"/>
-    <options buildIfNeeded="true" compress="true" descriptionLocation="/sawa/sawa.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <jar path="Scriptic/bin/sawa.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/Scriptic/etc/sawa.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
-    <manifest generateManifest="true" mainClassHandleIdentifier="=sawa/src&lt;scriptic.tools{Sawa.java[Sawa" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+    <manifest generateManifest="true" mainClassHandleIdentifier="=Scriptic/src&lt;scriptic.tools{Sawa.java[Sawa" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
         <sealing sealJar="false">
             <packagesToSeal/>
             <packagesToUnSeal/>
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=scripticvm"/>
-        <javaElement handleIdentifier="=sawa/src"/>
-        <file path="/sawa/.classpath"/>
-        <file path="/sawa/.project"/>
+        <javaElement handleIdentifier="=Scriptic/src&lt;scriptic.tools.lowlevel"/>
+        <javaElement handleIdentifier="=Scriptic/src&lt;scriptic.tools"/>
+        <javaElement handleIdentifier="=Scriptic/src&lt;scriptic.tokens"/>
+        <javaElement handleIdentifier="=Scriptic/src&lt;scriptic.vm"/>
     </selectedElements>
     <fatjar builder="org.eclipse.jdt.ui.plain_jar_builder" launchConfig=""/>
 </jardesc>
