@@ -28,6 +28,9 @@ import scriptic.vm.FromJava;
 public class Scripts {
 
     public static SwingCodeInvoker swing = new SwingCodeInvoker();
+    public static ThreadedCodeInvoker thread() {return new ThreadedCodeInvoker();}
+    public static ThreadedCodeInvoker thread(String name) 
+    {return thread().name(name);}
     
     public static scripts
 

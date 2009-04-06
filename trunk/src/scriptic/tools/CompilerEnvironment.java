@@ -317,7 +317,9 @@ class CompilerEnvironment extends ClassesEnvironment
    public ClassType        scripticVmFloatHolderType;
    public ClassType        scripticVmDoubleHolderType;
    public ClassType        scripticVmObjectHolderType;
-   public ClassType        scripticVmCodeInvokerType;
+   public ClassType        scripticVmCodeInvokerSynchronousType;
+   public ClassType        scripticVmCodeInvokerAsynchronousType;
+   public ClassType        scripticVmCodeInvokerThreadedType;
 
    public MemberVariable   scripticVmNodePass; 
    public MemberVariable   scripticVmNodePriority;
@@ -373,7 +375,9 @@ class CompilerEnvironment extends ClassesEnvironment
       scripticVmFloatHolderType           = mustResolveScripticVmClass (  "FloatHolder"        );
       scripticVmDoubleHolderType          = mustResolveScripticVmClass ( "DoubleHolder"        );
       scripticVmObjectHolderType          = mustResolveScripticVmClass ( "ObjectHolder"        );
-      scripticVmCodeInvokerType           = mustResolveScripticVmClass ( "CodeInvoker"         );
+      scripticVmCodeInvokerSynchronousType = mustResolveScripticVmClass ( "CodeInvokerSynchronous" );
+      scripticVmCodeInvokerAsynchronousType= mustResolveScripticVmClass ( "CodeInvokerAsynchronous");
+      scripticVmCodeInvokerThreadedType    = mustResolveScripticVmClass ( "CodeInvokerThreaded"    );
       scripticVmNodePass                  = scripticVmNodeType.resolveMemberVariable (this, "pass"    );
       scripticVmNodePriority              = scripticVmNodeType.resolveMemberVariable (this, "priority");
       scripticVmNodeSuccess               = scripticVmNodeType.resolveMemberVariable (this, "success" );

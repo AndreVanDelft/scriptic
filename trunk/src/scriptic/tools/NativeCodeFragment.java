@@ -32,7 +32,8 @@ class NativeCodeFragment extends ScriptExpression {
    public int startingDelimiter;
    public int endingDelimiter;
 
-   public boolean isPlainCodeFragment() {return startingDelimiter==BraceOpenToken;}
+   public boolean isPlainCodeFragment   () {return startingDelimiter==BraceOpenToken;}
+   public boolean isThreadedCodeFragment() {return startingDelimiter==BraceAsteriskOpenToken;}
    public JavaStatement lastStatement() {
      if (statements.size() > 0) {
         return statements.get(statements.size() - 1);

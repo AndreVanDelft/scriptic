@@ -30,8 +30,8 @@ abstract class ParallelNode extends OperatorNode {
 	int indexOfActivatedOptionalExit = -1;
 
 	// needed for ParBreakNode:
-	int passOfLatestOperandWithSuccessOnActivation;
-	int templateChildIndexOfLatestOperandWithSuccessOnActivation;
+	int passOfLatestOperandWithSuccessOnActivation = -1;
+	int templateChildIndexOfLatestOperandWithSuccessOnActivation = -1;
 
 	public String toString() {
 		return super.toString() + " rsuc:" + recentlySuccessfulChilds;
@@ -62,7 +62,8 @@ abstract class ParallelNode extends OperatorNode {
 				}
 				boolean activationHasSuccess = (activateResult & SuccessBit) != 0;
 				hadSuccessfulChilds |= activationHasSuccess;
-				if (activationHasSuccess) {
+				
+				if (activationHasSuccess && (activateResult & CodeBit) == 0) {
 					passOfLatestOperandWithSuccessOnActivation = pass;
 					templateChildIndexOfLatestOperandWithSuccessOnActivation = i;
 				}
