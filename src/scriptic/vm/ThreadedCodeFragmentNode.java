@@ -23,10 +23,12 @@ package scriptic.vm;
  */
 class ThreadedCodeFragmentNode extends CodeFragmentNode implements Runnable {
 	ThreadedCodeFragmentNode (NodeTemplate template, Node parent) {
-	                             super (template, parent);}
-
-	public String toString() {return super.toString()+" myThread: "+myThread;}
-
+	    super (template, parent);
+	    setAnchor(new DefaultCodeInvokerThreaded());                         
+	}
+	CodeInvokerThreaded codeInvoker() {
+		return (CodeInvokerThreaded) anchor;
+	}
 	public Boolean tryOutInBoundMode(boolean wasUnbound) {
 	    // note: hasSuccess must come first. Then the listOwner.current
 	    // may be set to the nextReq for the subRootNode.hasActivity loop;
@@ -39,7 +41,7 @@ class ThreadedCodeFragmentNode extends CodeFragmentNode implements Runnable {
             //presence in successes dangerous; not yet to succeed();
             //  only when busy became false:
 	    addToRequestList (rootNode.busyCFs);
-	    start(); // thread with doCode(); scheduleSuccess(); release lock...
+		codeInvoker().invokeInThread(this); // thread with doCode(); scheduleSuccess(); release lock...
 	    return Boolean.TRUE;
 	}
 	
@@ -49,51 +51,36 @@ class ThreadedCodeFragmentNode extends CodeFragmentNode implements Runnable {
 	 */
 	void exclude()
 	{
-	    stop();
+		CodeInvokerThreaded c = codeInvoker();
+		if (c.isAlive()) {
+			c.interrupt();
+			try {
+				c.join();
+                synchronized(rootNode) {
+                    deschedule();
+                    rootNode.markForDeactivation(this);
+                }
+			}
+			catch (InterruptedException e)
+			{
+			}
+		}
 	    super.exclude();
 	}
 
-	ScripticThread myThread = null;
-	public void init () {}
-	public void start() {
-	    if (myThread == null) {
-	        myThread = new ScripticThread(this, "Script thread");
-                myThread.setPriority(Thread.NORM_PRIORITY);
-	        myThread.start();
-	    }
-	}
-	public void stop() {
-            if (myThread!=null
-            &&  myThread.isAlive())
-            {
-	          //myThread.stop();
-	          myThread.setStop(true);
-	          myThread.waitStop(60);
-                synchronized(rootNode) {
-                  if (myThread != null) {
-                      myThread  = null;
-                      deschedule();
-                      rootNode.markForDeactivation(this);
-                  }
-                }
-	        //subRootNode().exitMutex(this); ...
-            }
-	}
 	public void run() {
 	    doCode();
 	    FromJava.threadedCodeExecutionHasEnded();
+		CodeInvokerThreaded c = codeInvoker();
 	    //rootNode.enterMutex(this); 
-            if (myThread != null
-            &&  !myThread.mustStop1()) {
-                 myThread.setStopped(true);
-    	        myThread  = null;
+        if (!c.interrupted()) {
                 synchronized(rootNode) {
                   deschedule();
                   scheduleSuccess();
                 }
-            }
-            FromJava.shouldWaitForUserInput = false;
-            FromJava.doNotify(); // in case it had been waitingForUserInput...
+        }
+        FromJava.shouldWaitForUserInput = false;
+        FromJava.doNotify(); // in case it had been waitingForUserInput...
 	    //rootNode.exitMutex(this); 
 	}
 }

@@ -46,7 +46,7 @@ final class ThreadedCodeFragmentWithDurationNode extends ThreadedCodeFragmentNod
             //presence in successes dangerous; not yet to succeed();
             //  only when busy became false:
 	    addToDurationList (rootNode.busyCFDs);
-	    start(); // thread with doCode(); scheduleSuccess(); release lock...
+		codeInvoker().invokeInThread(this); // thread with doCode(); scheduleSuccess(); release lock...
 	    return Boolean.TRUE;
 	}
 }

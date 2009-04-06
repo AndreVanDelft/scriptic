@@ -16,25 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package scriptic.vm;
+ package scriptic.vm;
 
-/**
- * Dual-parallel operator node |
- */
-class ParOrNode extends NotBreakParallelNode {
-	ParOrNode (NodeTemplate template, Node parent) {super (template, parent);}
-	boolean isOrLikeOptr() {return true;}
-	
-	void successOccursInChild(Node theChild) {
-		if (passOfLatestOperandWithSuccessOnActivation>=0)
-		{
-			if (!hadRecentSuccess()) {
-				succeed();
-				setRecentSuccess();
-			}
-		}
-		super.successOccursInChild(theChild);
-	}
-	
+public interface CodeInvokerAsynchronous {
+  void invokeAsynchronously(Runnable r) throws Exception;
 }
-

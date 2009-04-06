@@ -892,14 +892,16 @@ if(doTrace) trace("setLocalData: "
                          if (FromJava.doCallbackExecuteCode()) {
                              FromJava.debugger.callbackExecuteCode (this);
                          }
-                         if (anchor!=null && !(this instanceof EventHandlingCodeFragmentNode))
+                         if (anchor!=null 
+                         && !(this instanceof EventHandlingCodeFragmentNode)
+                         && !(this instanceof ThreadedCodeFragmentNode))
                          {
                         	 try
                         	 {
                         		 if ((template.codeBits & TemplateCodes.AsyncFlag)!=0)
                         		 {
-	                        		 CodeInvoker c = (CodeInvoker) anchor;
-	                        		 c.invokeLater(new Runnable() {
+	                        		 CodeInvokerAsynchronous c = (CodeInvokerAsynchronous) anchor;
+	                        		 c.invokeAsynchronously(new Runnable() {
 	                        			 public void run(){
 	                        				 try {
 												template.codeMethod.invoke(owner, Node.this, index);
@@ -924,8 +926,8 @@ if(doTrace) trace("setLocalData: "
                         		 }
                         		 else
                         		 {
-	                        		 CodeInvoker c = (CodeInvoker) anchor;
-	                        		 c.invokeAndWait(new Runnable() {
+                        			 CodeInvokerSynchronous c = (CodeInvokerSynchronous) anchor;
+	                        		 c.invokeSynchronously(new Runnable() {
 	                        			 public void run(){
 	                        				 try {
 												template.codeMethod.invoke(owner, Node.this, index);
@@ -1024,8 +1026,9 @@ if(doTrace)n.trace("S>");
 		case ParAnd2OperatorCode: {ParAndNode q = (ParAndNode) p;
 				 if (++q.recentlySuccessfulChilds < q.startedChilds) return 0;
 				}break;
-		case ParOrOperatorCode:
-		case   ParOr2OperatorCode: ((ParOrNode)p).recentlySuccessfulChilds++;
+		case ParOrOperatorCode: ((ParOrNode)p).recentlySuccessfulChilds++;
+                              break;
+		case ParOr2OperatorCode: ((ParOr2Node)p).recentlySuccessfulChilds++;
 			                  break;
 		case ScriptDeclarationCode:
 if(false)n.trace("Script.succeeds? ");

@@ -6,17 +6,18 @@
  */
 package scriptic.util;
 
-import scriptic.vm.CodeInvoker;
+import scriptic.vm.CodeInvokerSynchronous;
+import scriptic.vm.CodeInvokerAsynchronous;
 import javax.swing.SwingUtilities;
 
-public class SwingCodeInvoker implements CodeInvoker {
+public class SwingCodeInvoker implements CodeInvokerSynchronous, CodeInvokerAsynchronous {
 
 	@Override
-	public void invokeAndWait(Runnable r) throws Exception {
+	public void invokeSynchronously(Runnable r) throws Exception {
 		SwingUtilities.invokeAndWait(r);
 	}
 	@Override
-	public void invokeLater(Runnable r) throws Exception {
+	public void invokeAsynchronously(Runnable r) throws Exception {
 		SwingUtilities.invokeLater(r);
 	}
 }

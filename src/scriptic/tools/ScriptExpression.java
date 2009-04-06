@@ -27,7 +27,7 @@ import java.util.ArrayList;
    /*******************************************************************/
 
 class ScriptExpression extends LanguageConstruct
-         implements scriptic.tokens.ScripticParseTreeCodes {
+         implements scriptic.tokens.ScripticParseTreeCodes, scriptic.tokens.ScripticTokens {
 	JavaExpression anchorExpression;
    public ScriptExpression () { }
    public ScriptExpression (ScriptExpression anotherExpression) { 

@@ -1181,13 +1181,28 @@ in this Hashtable:
       scriptContext.popLocalDeclarations (localDeclarations, expression);
    }
 
-   private void checkAnchorExpressionIsCodeInvokerType(JavaExpression anchorExpression, String forConstruct)
+   private void checkAnchorExpressionIsCodeInvokerType(JavaExpression anchorExpression, 
+		                                               ClassType codeInvokerType,
+		   											   String forConstruct)
    {
  	  try
- 	  {
-          if (!anchorExpression.dataType.isSubtypeOf (env, env.scripticVmCodeInvokerType))
+ 	  { 
+          if (!anchorExpression.dataType.isSubtypeOf (env, codeInvokerType))
           {
-              parserError (2, "Anchor expression should implement scriptic.vm.CodeInvoker for "+forConstruct,
+        	  String cs = null;
+        	  if (codeInvokerType==env.scripticVmCodeInvokerSynchronousType) 
+        	  {
+        		  cs = "scriptic.vm.CodeInvokerSynchronous";
+              }
+        	  if (codeInvokerType==env.scripticVmCodeInvokerAsynchronousType) 
+        	  {
+        		  cs = "scriptic.vm.CodeInvokerAsynchronous";
+              }
+        	  if (codeInvokerType==env.scripticVmCodeInvokerThreadedType) 
+        	  {
+        		  cs = "scriptic.vm.CodeInvokerThreaded";
+              }
+              parserError (2, "Anchor expression should implement "+cs+" for "+forConstruct,
             		  anchorExpression.sourceStartPosition, 
             		  anchorExpression.sourceEndPosition);
           }
@@ -1220,7 +1235,14 @@ in this Hashtable:
 
 	  if (expression.anchorExpression != null) {
          processJavaExpression (scriptDeclaration, expression.anchorExpression, level + 1, retValue, localDeclarations, arg2);
-         checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, "code fragment");
+         ClassType codeInvokerType = env.scripticVmCodeInvokerSynchronousType;
+         if (expression.isPlainCodeFragment()) {
+        	 codeInvokerType = env.scripticVmCodeInvokerAsynchronousType;
+         }
+         else if (expression.isThreadedCodeFragment()) {
+        	 codeInvokerType = env.scripticVmCodeInvokerThreadedType;
+         }
+         checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, codeInvokerType, "code fragment");
  	  }
       if (expression.durationAssignment != null) {
          scriptContext.processingDurationAssignment = true;
@@ -1280,7 +1302,7 @@ in this Hashtable:
 
 	  if (expression.anchorExpression != null) {
 	         processJavaExpression (scriptDeclaration, expression.anchorExpression, level + 1, retValue, arg1, arg2);
-		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, "activation code");
+		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, env.scripticVmCodeInvokerSynchronousType, "activation code");
       }
       // Signal permission to assign "priority" in the 
       // activation code fragment
@@ -1295,7 +1317,7 @@ in this Hashtable:
 
 	  if (expression.anchorExpression != null) {
 	         processJavaExpression (scriptDeclaration, expression.anchorExpression, level + 1, retValue, arg1, arg2);
-		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, "deactivation code");
+		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, env.scripticVmCodeInvokerSynchronousType, "deactivation code");
       }
       // Signal permission to use "success" in the deactivation code fragment
       processScriptExpression  (scriptDeclaration, expression.scriptTerm, level + 1, retValue, arg1, arg2);
@@ -1314,7 +1336,7 @@ in this Hashtable:
     try {
   	  if (expression.anchorExpression != null) {
 	         processJavaExpression (scriptDeclaration, expression.anchorExpression, level + 1, retValue, arg1, arg2);
-		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, "script call");
+		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, env.scripticVmCodeInvokerSynchronousType, "script call");
       }
       boolean foundError = false;
 
@@ -1568,7 +1590,7 @@ parameter.target = (Parameter) argument.target;
       super.processIfScriptExpression  (scriptDeclaration, expression, level, retValue, arg1, arg2);
 	  if (expression.anchorExpression != null) {
 	         processJavaExpression (scriptDeclaration, expression.anchorExpression, level + 1, retValue, arg1, arg2);
-		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, "if-expression");
+		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, env.scripticVmCodeInvokerSynchronousType, "if-expression");
       }
       if (!expression.condition.dataType.isBoolean()) {
             parserError (2, "Boolean type expected",
@@ -1581,7 +1603,7 @@ parameter.target = (Parameter) argument.target;
       super.processWhileScriptExpression  (scriptDeclaration, expression, level, retValue, arg1, arg2);
 	  if (expression.anchorExpression != null) {
 	         processJavaExpression (scriptDeclaration, expression.anchorExpression, level + 1, retValue, arg1, arg2);
-		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, "while-expression");
+		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, env.scripticVmCodeInvokerSynchronousType, "while-expression");
       }
       if (!expression.condition.dataType.isBoolean()) {
             parserError (2, "Boolean type expected",
@@ -1593,7 +1615,7 @@ parameter.target = (Parameter) argument.target;
    protected void processForScriptExpression    (BasicScriptDeclaration scriptDeclaration, ForScriptExpression expression, int level, ReturnValueHolder retValue, Object arg1, Object arg2) {
 	  if (expression.anchorExpression != null) {
 	         processJavaExpression (scriptDeclaration, expression.anchorExpression, level + 1, retValue, arg1, arg2);
-		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, "for-expression");
+		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, env.scripticVmCodeInvokerSynchronousType, "for-expression");
       }
       if (expression.initExpression != null) {
           expression.initExpression.setTopLevelExpression();
@@ -1617,7 +1639,7 @@ parameter.target = (Parameter) argument.target;
       super.processSwitchScriptExpression  (scriptDeclaration, expression, level, retValue, this, arg2);
 	  if (expression.anchorExpression != null) {
 	         processJavaExpression (scriptDeclaration, expression.anchorExpression, level + 1, retValue, arg1, arg2);
-		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, "switch-expression");
+		     checkAnchorExpressionIsCodeInvokerType(expression.anchorExpression, env.scripticVmCodeInvokerSynchronousType, "switch-expression");
       }
 
       if (!expression.switchExpression.dataType.isSmallIntegral()

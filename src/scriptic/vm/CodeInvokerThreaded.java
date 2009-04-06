@@ -18,7 +18,10 @@
 
  package scriptic.vm;
 
-public interface CodeInvoker {
-  void invokeLater  (Runnable r) throws Exception;
-  void invokeAndWait(Runnable r) throws Exception;
+public interface CodeInvokerThreaded {
+  void invokeInThread(Runnable r);
+  void interrupt();
+  void join() throws InterruptedException;
+  boolean isAlive();
+  boolean interrupted();
 }
