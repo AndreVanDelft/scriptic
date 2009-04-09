@@ -1,0 +1,21 @@
+package Examples;
+
+public class T
+{
+  static int i=0;
+  
+  public static scripts 
+    main(String[] args) = a;b;c # {? i>0?? ?}; p;q;r # {? i>1?? ?}; x;y;z
+    
+    s(String s) = {i++; System.out.print(s+" ")}
+    a = s("a")
+    b = s("b")
+    c = s("c")
+    p = s("p")
+    q = s("q")
+    r = s("r")
+    x = s("x")
+    y = s("y")
+    z = s("z")
+    
+}
