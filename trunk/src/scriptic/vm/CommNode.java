@@ -198,16 +198,16 @@ public Boolean tryOutInBoundMode(boolean wasUnbound) {return Boolean.TRUE;}
         parOpAncestor.excludeRequests();
     }
 
-    /** some local request hasSuccess. Propagate to partners */
-    void hasSuccess()
+    /** some local request atomicActionHappens. Propagate to partners */
+    void atomicActionHappens()
     {
         if (partners!=null) {    // else error!
           for (int i=0; i<partners.length; i++)
           {
-             partners[i].hasSuccess();
+             partners[i].atomicActionHappens();
           }
         }
-        else if(doTrace)trace("H> Unexpected: hasSuccess, partners==null ");
+        else if(doTrace)trace("H> Unexpected: atomicActionHappens, partners==null ");
     }
     
     /**
@@ -242,8 +242,8 @@ public Boolean tryOutInBoundMode(boolean wasUnbound) {return Boolean.TRUE;}
      * Note: the trick of finding possible partners is in the following rule:
      *   Two requests are in parallel, and thus possible partners,
      *   iff their traces upwards in the mixed trees of SpecificOperands
-     *   and the parent nodes thereof, meet for the first time
-     *   in such a parent node, so NOT in a SpecificOperands.
+     *   &&  the parent nodes thereof, meet for the first time
+     *       in such a parent node, so NOT in a SpecificOperand.
      * To check for this condition, these traces will be marked by a stamp value.
      */
     Boolean findAndTryPartnersFor (TryableNode tryableNode) {
@@ -269,6 +269,9 @@ public Boolean tryOutInBoundMode(boolean wasUnbound) {return Boolean.TRUE;}
         for (CommRequestNode c = (CommRequestNode) partnerFrame._requests.first; c!=null;
          c = (CommRequestNode)c.nextReq)
         {
+        	if (c.isSuspended()) {
+        		continue;
+        	}
 	        if (n>0 && !checkStamps(c,n))   continue; // must not exclude one another
 	        partners[n] = c;
 	        if (n < partners.length-1) {

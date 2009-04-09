@@ -77,6 +77,7 @@ public interface ScripticParseTreeCodes {
    public final static int              ParAndOperatorCode     = '&';
    public final static int           ParAnd2OperatorCode     = 1+ParAndOperatorCode; // &&
    public final static int            ParOr2OperatorCode     = '"'; // ||
+   public final static int          SuspendOperatorCode     = '#'; 
    public final static int               OrOperatorCode     = '+';
    public final static int              SeqOperatorCode     = ';';
    public final static int           NotSeqOperatorCode     = '%';

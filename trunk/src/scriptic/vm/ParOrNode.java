@@ -25,7 +25,7 @@ class ParOrNode extends NotBreakParallelNode {
 	ParOrNode (NodeTemplate template, Node parent) {super (template, parent);}
 	boolean isOrLikeOptr() {return true;}
 	
-	void successOccursInChild(Node theChild) {
+	void atomicActionHappensInChild(Node theChild) {
 		if (passOfLatestOperandWithSuccessOnActivation>=0)
 		{
 			if (!hadRecentSuccess()) {
@@ -33,7 +33,7 @@ class ParOrNode extends NotBreakParallelNode {
 				setRecentSuccess();
 			}
 		}
-		super.successOccursInChild(theChild);
+		super.atomicActionHappensInChild(theChild);
 	}
 	
 }

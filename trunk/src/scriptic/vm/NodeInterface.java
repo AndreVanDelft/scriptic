@@ -48,10 +48,10 @@ public interface NodeInterface extends AttributesInterface {
 	/** parent in main run-time tree */
 	NodeInterface parent();
 
-	/** previous sibbling in main run-time tree */
+	/** previous sibling in main run-time tree */
 	NodeInterface prev();
 
-	/** next sibbling in main run-time tree */
+	/** next sibling in main run-time tree */
 	NodeInterface next();
 
 	/** first child */

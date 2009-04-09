@@ -61,6 +61,10 @@ public class ScripticScanner extends JavaScanner
 			         return returnToken(AtSignToken);
 			  }
 
+		      if (ch == '#') {
+			         return returnToken(HashToken);
+			  }
+
 		      if (ch == ':') {  /*  :}   */
 		          ch = charBuffer [charPosition++];
 		          if (ch == '}')

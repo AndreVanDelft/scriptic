@@ -463,6 +463,7 @@ final public class NodeTemplate implements ScripticParseTreeCodes,
 
             switch (typeCode) {
             case             ParBreakOperatorCode:
+            case            SuspendOperatorCode:
             case              ParOrOperatorCode:
             case                  ParAndOperatorCode:
             case               ParAnd2OperatorCode:
@@ -628,10 +629,11 @@ final public class NodeTemplate implements ScripticParseTreeCodes,
         if (!isIteration()) return false;
         switch (typeCode) {
             case ParBreakOperatorCode:
-            case  ParOrOperatorCode:
-            case      ParAndOperatorCode:
-            case   ParAnd2OperatorCode:
-            case    ParOr2OperatorCode:
+            case  SuspendOperatorCode:
+            case    ParOrOperatorCode:
+            case   ParAndOperatorCode:
+            case  ParAnd2OperatorCode:
+            case   ParOr2OperatorCode:
             case       OrOperatorCode:
             case      SeqOperatorCode:
             case   NotSeqOperatorCode: return false;
@@ -758,10 +760,11 @@ default: Node.debugOutput("activateFrom(n,f,p) " + parentNode.getName() + " : " 
       case       ActivationCodeCode: node = new     ActivationNode(this, parentNode); break;
       case     DeactivationCodeCode: node = new   DeactivationNode(this, parentNode); break;
       case     ParBreakOperatorCode: node = new       ParBreakNode(this, parentNode); break;
-      case      ParOrOperatorCode: node = new        ParOrNode(this, parentNode); break;
-      case       ParAnd2OperatorCode: node = new         ParAnd2Node(this, parentNode); break;
-      case          ParAndOperatorCode: node = new              ParAndNode(this, parentNode); break;
-      case        ParOr2OperatorCode: node = new            ParOr2Node(this, parentNode); break; 
+      case        ParOrOperatorCode: node = new        ParOrNode(this, parentNode); break;
+      case      ParAnd2OperatorCode: node = new         ParAnd2Node(this, parentNode); break;
+      case       ParAndOperatorCode: node = new              ParAndNode(this, parentNode); break;
+      case      SuspendOperatorCode: node = new       SuspendResumeNode(this, parentNode); break;
+      case       ParOr2OperatorCode: node = new            ParOr2Node(this, parentNode); break; 
       case           OrOperatorCode: node = new               OrNode(this, parentNode); break;
       case          SeqOperatorCode: node = new              SeqNode(this, parentNode); break;
       case       NotSeqOperatorCode: node = new           NotSeqNode(this, parentNode); break;

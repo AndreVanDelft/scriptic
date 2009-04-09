@@ -67,7 +67,7 @@ if (doTrace) traceOutput("LaunchedNode.startScript: " + this
 	/** 
 	 * add a child node: 
          * set the parent variable; adjust the active count.
-	 * insert the child into the semi-closed double linked list of sibblings
+	 * insert the child into the semi-closed double linked list of siblings
 	 * ensure next==null
 	 */
 	void addChild (Node theChild)

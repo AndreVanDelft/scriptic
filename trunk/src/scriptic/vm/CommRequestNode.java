@@ -82,6 +82,17 @@ class CommRequestNode extends RequestNode implements CalleeNodeInterface {
 	    else if (listOwner!=null) deschedule(); // from request list; success list N.A.
 	    deactivate(false); // upwards in tree
 	}
+	/** 
+	 * this is to be descheduled and deactivated,
+	 * probably because an exclusive code fragment succeeded
+	 */
+    public void incSuspendedCount(boolean increment)
+	{
+		super.incSuspendedCount(increment);
+	    if   (commNode!=null) {
+	    	commNode.parOpAncestor.suspendOrResumeRequests(increment);
+	    }
+	}
 
 	/**
 	 * Test wether the formal parameter at the given 

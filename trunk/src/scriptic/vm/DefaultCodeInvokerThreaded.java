@@ -25,7 +25,7 @@ public class DefaultCodeInvokerThreaded implements CodeInvokerThreaded {
 
 	@Override
 	public boolean isAlive() {
-		return thread.isAlive();
+		return thread!=null && thread.isAlive();
 	}
 
 	@Override
@@ -34,8 +34,8 @@ public class DefaultCodeInvokerThreaded implements CodeInvokerThreaded {
 	}
 
 	@Override
-	public boolean interrupted() {
-		return thread.interrupted();
+	public boolean isInterrupted() {
+		return thread.isInterrupted();
 	}
 
 }

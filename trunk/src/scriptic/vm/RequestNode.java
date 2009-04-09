@@ -31,8 +31,20 @@ abstract class RequestNode extends Node {
 
 //boolean doTrace = true;
 
-        public       double     duration = NO_DURATION;
-        public       double old_duration = NO_DURATION;
+    public       double     duration = NO_DURATION;
+    public       double old_duration = NO_DURATION;
+    private      int     suspendedCount;
+    public       void    incSuspendedCount(boolean increment) {
+    	if (increment)
+    	{
+    		suspendedCount++;
+    	}
+    	else
+    	{
+    		suspendedCount--;
+    	}
+    }
+    public       boolean isSuspended() {return suspendedCount > 0;}
 	public       double  oldDuration()        {return old_duration  ;}
 	public final double  getDuration()        {return     duration  ;}
 	public final void    setDuration(double d){           duration=d;}
@@ -87,6 +99,10 @@ if (CHECK_LISTS) {
 	abstract void scheduleRequest();
 	abstract void deschedule();
 
+	// this atomic action has succeeded; the succeed() method has already been called,
+	// so successes have been propagated upwards as applicable
+	// However, some kinds of ancestor nodes may also succeed because of the fact that 
+	// an atomic action in its descendants has completed successfully 
 	void hadSucceeded() {
 	    Node n, p;
 	    for (n=this; (p=n.reacAncestor) != null; n=p) {
@@ -225,7 +241,7 @@ if (doTrace)trace("X>");
 	 * Make sure appropriate requests will be excluded,
 	 * special care for parallel operators, and propagate through partners
 	 */
-	void hasSuccess() {
+	void atomicActionHappens() {
 
 if (doTrace)trace("H>");
 if (doTrace)parOpAncestor.node.trace("P>");
@@ -233,21 +249,21 @@ if (doTrace)parOpAncestor.node.trace("P>");
 	    SpecificOperand s1, parentOp;
 	    RequestNode n, nextN;
 if (CHECK_LISTS)
-if (parOpAncestor==null) debugOutput("hasSuccess: parOpAncestor==null @"+this);
+if (parOpAncestor==null) debugOutput("atomicActionHappens: parOpAncestor==null @"+this);
 
-            if (FromJava.doCallbackHasSuccess()) {
-                FromJava.debugger.callbackHasSuccess (this);
+            if (FromJava.doCallbackAtomicActionHappens()) {
+                FromJava.debugger.callbackAtomicActionHappens (this);
             }
 
 	    parOpAncestor.passOfSuccess = rootNode.pass;
 
-	    // stop sibbling threads
+	    // stop sibling threads
 	    //ThreadNode thr = threadAncestor();
 	    //for (ThreadNode t=parOpAncestor.firstThread; t!=null; t=t.nextThread) {
 		//if (t!=thr) t.stop();
 	    //}
 
-	    // exclude sibbling requests
+	    // exclude sibling requests
 	    for (n=parOpAncestor.firstReq; n!=null; n=nextN) {
 		nextN=n.nextInParOp;
 		if (n!=this) {
@@ -270,15 +286,23 @@ if (parOpAncestor==null) debugOutput("hasSuccess: parOpAncestor==null @"+this);
 		case    SendChannelDeclarationCode:
 		case ReceiveChannelDeclarationCode:
 if (doTrace)s1.node.trace("H>@CommNode: ");
-                                  ((CommNode)s1.node).hasSuccess(); // propagate to partners
+                                  ((CommNode)s1.node).atomicActionHappens(); // propagate to partners
 				  break;
 		default: switch (s1.node.parent.template.typeCode) {
-		  case ParBreakOperatorCode: ((ParBreakOperand)s1).excludeLeftSibblings(); // NO break;
+		  case SuspendOperatorCode:  
+			  s1.excludeRightSiblingsWithTick();
+			  if (!s1.hasSuspended) {
+				  s1.hasSuspended = true;
+				  s1.suspendOrResumeLeftSiblings(true);
+			  }
+              ((ParallelNode)s1.node.parent).atomicActionHappensInChild(s1.node);
+              break;
+		  case ParBreakOperatorCode: ((ParBreakOperand)s1).excludeLeftSiblings(); // NO break;
 		  case      ParAndOperatorCode:     
 		  case  ParOrOperatorCode:     
 		  case   ParAnd2OperatorCode:     
 		  case    ParOr2OperatorCode:    // set cycle, recentSuccesses; continue ".."
-		                    ((ParallelNode)s1.node.parent).successOccursInChild(s1.node);
+		                    ((ParallelNode)s1.node.parent).atomicActionHappensInChild(s1.node);
 		                    break;
 		  }
 		}
@@ -293,8 +317,8 @@ if (doTrace)s1.node.trace("H>@CommNode: ");
 		    n.exclude();
 		}
 
-		// exclude those sibblings of s1 that have different the parent NODES
-		// then we're sure that those sibblings are not in parallel !!!!
+		// exclude those siblings of s1 that have different the parent NODES
+		// then we're sure that those siblings are not in parallel !!!!
 		if (s1.node.parent.template.typeCode != RootCode)
 		    for (SpecificOperand s2=parentOp.firstChild; s2!=null; s2=s2.next) 
 			if(s1.node.parent != s2.node.parent) s2.excludeRequests();
@@ -303,7 +327,9 @@ if (doTrace)s1.node.trace("H>@CommNode: ");
 		s1.ticks++;
 		if (parentOp!=null
 		&&  s1.node.parent.template.typeCode == ParBreakOperatorCode) 
-			        ((ParBreakOperand)s1).excludeLeftSibblings();
+		{
+			        ((ParBreakOperand)s1).excludeLeftSiblings();
+		}
 	    }
 	}
 	/**

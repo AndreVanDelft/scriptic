@@ -35,10 +35,10 @@ final class ThreadedCodeFragmentWithDurationNode extends ThreadedCodeFragmentNod
 	void scheduleSuccess() {addToDurationList(rootNode.successfulCFDs);}
 
 	public Boolean tryOutInBoundMode(boolean wasUnbound) {
-	    // note: hasSuccess must come first. Then the listOwner.current
+	    // note: atomicActionHappens must come first. Then the listOwner.current
 	    // may be set to the nextReq for the subRootNode.hasActivity loop;
 	    // only then deschedule is possible
-	    hasSuccess();
+	    atomicActionHappens();
 	    listOwner.current = (CodeFragmentNode) nextReq;
 	    deschedule(); 
             //subRootNode must know priority and duration!

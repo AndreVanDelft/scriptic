@@ -190,6 +190,6 @@ public interface JavaTokens {
    public final static int QuestionToken           =  FirstMiscToken + 0;
    public final static int ColonToken              =  FirstMiscToken + 1;
 
-   public final static int LastToken               =  ScripticTokens.AtSignToken; // messy
+   public final static int LastToken               =  ScripticTokens.HashToken; // messy
 
 }

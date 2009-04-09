@@ -41,6 +41,7 @@ public interface ScripticRepresentations extends JavaRepresentations {
    public final static String DoubleQuestionRepresentation            =  "??";
    public final static String DoubleExclamationRepresentation         =  "!!";
    public final static String AtSignRepresentation                    =  "@";
+   public final static String HashRepresentation                      =  "#";
 
    /* Extra keywords */
    public final static String ScriptRepresentation                    = "script";

@@ -24,11 +24,11 @@ package scriptic.vm;
 class ParBreakOperand extends ParallelOperand {
 	ParBreakOperand (Node node) {super(node);}
 	
-	void excludeLeftSibblings() {
+	void excludeLeftSiblings() {
 	    SpecificOperand s, nextS;
 	    for (s=parent.firstChild; s!=this; s=nextS) {
-		nextS = s.next;
-		s.excludeRequests();
+		  nextS = s.next;
+		  s.excludeRequests();
 	    }
 	}
 }

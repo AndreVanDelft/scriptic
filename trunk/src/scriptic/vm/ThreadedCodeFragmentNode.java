@@ -29,11 +29,12 @@ class ThreadedCodeFragmentNode extends CodeFragmentNode implements Runnable {
 	CodeInvokerThreaded codeInvoker() {
 		return (CodeInvokerThreaded) anchor;
 	}
+	private boolean executionHasEnded;
 	public Boolean tryOutInBoundMode(boolean wasUnbound) {
-	    // note: hasSuccess must come first. Then the listOwner.current
+	    // note: atomicActionHappens must come first. Then the listOwner.current
 	    // may be set to the nextReq for the subRootNode.hasActivity loop;
 	    // only then deschedule is possible
-	    hasSuccess();
+	    atomicActionHappens();
 	    listOwner.current = (CodeFragmentNode) nextReq;
 	    deschedule(); 
             //subRootNode must know priority!
@@ -55,7 +56,16 @@ class ThreadedCodeFragmentNode extends CodeFragmentNode implements Runnable {
 		if (c.isAlive()) {
 			c.interrupt();
 			try {
-				c.join();
+				if (c.isAlive()) {
+    				//c.join();  does not return, for some strange reason; therefore a polling loop:
+				    while (!executionHasEnded)
+				    {
+				        //try {
+				        Thread.sleep(50);
+				        //}
+				        //catch (InterruptedException e) {}
+				     }
+				}
                 synchronized(rootNode) {
                     deschedule();
                     rootNode.markForDeactivation(this);
@@ -70,10 +80,11 @@ class ThreadedCodeFragmentNode extends CodeFragmentNode implements Runnable {
 
 	public void run() {
 	    doCode();
+	    executionHasEnded = true;
 	    FromJava.threadedCodeExecutionHasEnded();
 		CodeInvokerThreaded c = codeInvoker();
 	    //rootNode.enterMutex(this); 
-        if (!c.interrupted()) {
+        if (!c.isInterrupted()) {
                 synchronized(rootNode) {
                   deschedule();
                   scheduleSuccess();

@@ -39,6 +39,10 @@ public String toString() {return super.toString()+((isIteration&&!mustBreakFromL
         public final void breakIteration() {mustBreakFromLoop=true;}
 
         public final Boolean tryOut() {
+        	if (isSuspended())
+        	{
+        		return null;
+        	}
             if (subRootNode instanceof CommNode) {
                 CommNode commNode = (CommNode) subRootNode;
                 if (commNode.partners == null) {
@@ -73,7 +77,7 @@ trace("tryOutInBoundMode: ");
                     && pass==0) // this test is not really needed
                                     // since wasUnbound would otherwise be false...
                     {   // subRootNode's lock already in possession!
-                        hasSuccess(); // will bind to the partners...
+                        atomicActionHappens(); // will bind to the partners...
                     }
                     if (hasOptionalExit) {
                         if (!parent.isWithOrLikeOptr()  )
@@ -100,8 +104,8 @@ trace("tryOutInBoundMode: ");
 
                     if (wasUnbound) {// subRootNode's lock already in possession!
                         if (!isIteration||mustBreakFromLoop||pass==0)
-                        {   // otherwise hasSuccess has already been called...
-                            hasSuccess();
+                        {   // otherwise atomicActionHappens has already been called...
+                            atomicActionHappens();
                         }
                         // NOT scheduleSuccess(); because then priorities would mess things up a bit.
                         // instead, do now like subRootNode's handling scheduled Successes:
@@ -111,7 +115,7 @@ trace("tryOutInBoundMode: ");
                         addToRequestList(rootNode.succeededRequests);
                     } else {
                         // subRootNode's lock not in possession, so add to ehcfSuccesses
-                        // so that hasSuccess and success handling will be done later
+                        // so that atomicActionHappens and success handling will be done later
                         rootNode.addToEHCFSuccesses(this);
                     }
                     FromJava.doNotify(); // in case it was waiting for input

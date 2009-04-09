@@ -452,6 +452,7 @@ public class ScripticParser extends JavaParser
                                  	          BooleanAndToken,    //   &&
                                  	          VerticalBarToken,   //   |
                                  	          AmpersandToken,     //   &
+                                 	          HashToken,     	  //   #
                                  	          SlashToken,         //   /
                                  	          PercentToken,       //   %
                                  	          SemicolonToken,     //   ;
@@ -1251,6 +1252,7 @@ public class ScripticParser extends JavaParser
       switch (codeFragment.startingDelimiter)
       {
     	case          BraceOpenToken: currentClosingToken  = currentClosingToken2 = BraceCloseToken; break;
+      	case  BraceQuestionOpenToken: currentClosingToken  = currentClosingToken2 = BraceQuestionCloseToken; break;
       	case     BraceColonOpenToken: currentClosingToken  = currentClosingToken2 = BraceColonCloseToken; break;
       	case  BraceAsteriskOpenToken: currentClosingToken  = currentClosingToken2 = BraceAsteriskCloseToken; break;
       	case    BracePeriodOpenToken: currentClosingToken  = currentClosingToken2 = BracePeriodCloseToken; break;

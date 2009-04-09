@@ -400,7 +400,7 @@ CodeFragmentNode.tryOut =
 
 PlainCodeFragmentNode.tryOutInBoundMode =
 	    deschedule
-	    hasSuccess
+	    atomicActionHappens
 	    scheduleSuccess
 	    exitCriticalSection
 	    doCode
@@ -411,7 +411,7 @@ UnsureCodeFragmentNode.tryOutInBoundMode =
 	    doCode
 	    if success:
 		    deschedule
-		    hasSuccess
+		    atomicActionHappens
 		    scheduleSuccess
 		    return true
 	    else
@@ -425,13 +425,13 @@ commNode.findAndTryPartnersFor(TryableNode) =
 	    tryableNode.tryOutInBoundMode
             >> doCode
                >> deschedule
-                  hasSuccess
+                  atomicActionHappens
                   scheduleSuccess
                bindToPartners
 	       >> all partners.deschedule
 	          frame.activateWhenAllPartnerActive
 
-hasSuccess =
+atomicActionHappens =
             parOpAncestor request list = the succeeded request
             conflicting requests.exclude
 
@@ -449,7 +449,7 @@ TryOut
      tryOutInBoundMode
      >> doCode
         >> deschedule
-           hasSuccess
+           atomicActionHappens
            >> parOpAncestor request list = ['c' request];
               'x' request.exclude
 	   scheduleSucess
@@ -721,10 +721,10 @@ public abstract class Node implements ScripticParseTreeCodes,
 	/** parent in main run-time tree */
 	Node parent;
 
-	/** previous sibbling in main run-time tree */
+	/** previous sibling in main run-time tree */
 	Node prev;
 
-	/** next sibbling in main run-time tree */
+	/** next sibling in main run-time tree */
 	Node next;
 
 	/** associated template */
@@ -1014,47 +1014,56 @@ if(doTrace) trace("setLocalData: "
 
 	    for (n=this; (p=n.parent) != null; n=p) {
 if(doTrace)n.trace("S>");
-                if (FromJava.doCallbackSucceed()) {
-                    FromJava.debugger.callbackSucceed (n);
-                }
-		if (n.hadRecentSuccess()) return 0;
-		n.setRecentSuccess();
-		switch (p.template.typeCode) {
-		case         NotOperatorCode:
-		case ReactiveNotOperatorCode: return 0;
-		case    ParAndOperatorCode:
-		case ParAnd2OperatorCode: {ParAndNode q = (ParAndNode) p;
-				 if (++q.recentlySuccessfulChilds < q.startedChilds) return 0;
-				}break;
-		case ParOrOperatorCode: ((ParOrNode)p).recentlySuccessfulChilds++;
-                              break;
-		case ParOr2OperatorCode: ((ParOr2Node)p).recentlySuccessfulChilds++;
-			                  break;
-		case ScriptDeclarationCode:
-if(false)n.trace("Script.succeeds? ");
-				if (((ScriptNode)p).testParams()==Boolean.FALSE) return 0;
-if(false)n.trace("Script.succeeds! ");
-			        break;
-
-		case ConditionalScriptExpressionCode: if (n.template.indexAsChild==0) {
-	                                   int result = p.template.childs[1].activateFrom(p);
-//trace("?: : p.template.childs[1].activateFrom(this)="+result
-//      +((result & SuccessBit) != 0? "success!": "failure"));
-                                           if((result & SuccessBit) == 0) {
-                                                return 0;
-                                           }
-		                       }
-		                       break;
-
-		case SeqOperatorCode: //do not continue the loop here.
-                                       //!p.childSucceeds(n) may call p.succeed, if applicable
-		case  CommunicationDeclarationCode:
-		case        ChannelDeclarationCode:
-		case    SendChannelDeclarationCode:
-		case ReceiveChannelDeclarationCode: return p.childSucceeds(n);
-		case      ScriptCallExpressionCode:
-		case            ChannelReceiveCode:        p.childSucceeds(n); break;
-		}
+            if (FromJava.doCallbackSucceed()) {
+                FromJava.debugger.callbackSucceed (n);
+            }
+			if (n.hadRecentSuccess()) return 0;
+			n.setRecentSuccess();
+			switch (p.template.typeCode) {
+			case         NotOperatorCode:
+			case ReactiveNotOperatorCode: return 0;
+			case SuspendOperatorCode:
+				{
+					SpecificOperand s = n.parOpAncestor;
+					if (s.hasSuspended) {
+						s.hasSuspended = false;
+						s.suspendOrResumeLeftSiblings(false);
+					}
+				}
+	    		break;
+			case    ParAndOperatorCode:
+			case ParAnd2OperatorCode: {ParAndNode q = (ParAndNode) p;
+					 if (++q.recentlySuccessfulChilds < q.startedChilds) return 0;
+					}break;
+			case ParOrOperatorCode: ((ParOrNode)p).recentlySuccessfulChilds++;
+	                              break;
+			case ParOr2OperatorCode: ((ParOr2Node)p).recentlySuccessfulChilds++;
+				                  break;
+			case ScriptDeclarationCode:
+	if(false)n.trace("Script.succeeds? ");
+					if (((ScriptNode)p).testParams()==Boolean.FALSE) return 0;
+	if(false)n.trace("Script.succeeds! ");
+				        break;
+	
+			case ConditionalScriptExpressionCode: if (n.template.indexAsChild==0) {
+		                                   int result = p.template.childs[1].activateFrom(p);
+	//trace("?: : p.template.childs[1].activateFrom(this)="+result
+	//      +((result & SuccessBit) != 0? "success!": "failure"));
+	                                           if((result & SuccessBit) == 0) {
+	                                                return 0;
+	                                           }
+			                       }
+			                       break;
+	
+			case SeqOperatorCode: //do not continue the loop here.
+	                                       //!p.childSucceeds(n) may call p.succeed, if applicable
+			case  CommunicationDeclarationCode:
+			case        ChannelDeclarationCode:
+			case    SendChannelDeclarationCode:
+			case ReceiveChannelDeclarationCode: return p.childSucceeds(n);
+			case      ScriptCallExpressionCode:
+			case            ChannelReceiveCode:        p.childSucceeds(n); break;
+			}
 	    }
 	    return 0;
 	}
@@ -1069,59 +1078,68 @@ if(false)n.trace("Script.succeeds! ");
 	    Node n, m, p;
 	    for (n=this; (p=n.parent)!=null; n=p) {
 if(doTrace)n.trace("D>");
-                if (FromJava.doCallbackDeactivate()) {
-                    FromJava.debugger.callbackDeactivate (n);
-                }
-		switch (p.template.typeCode) {
-		case      ParAndOperatorCode:
-		case  ParOrOperatorCode: n.parOpAncestor.remove(); break;
-		case ParBreakOperatorCode:
-		case    ParOr2OperatorCode: n.parOpAncestor.remove();
-				   if (isActively && n.hadRecentSuccess())
-				       for (m=p.firstChild; m!=null; m=m.next)
-					   if(m!=n) m.parOpAncestor.excludeRequests();
-				   break;
-		case  ParAnd2OperatorCode: n.parOpAncestor.remove();
-				  if (isActively && !n.hadRecentSuccess())
-				       for (m=p.firstChild; m!=null; m=m.next)
-					   if(m!=n) m.parOpAncestor.excludeRequests();
-				   break;
-
-		case ConditionalScriptExpressionCode: if (isActively
-			               &&  n.template.indexAsChild==0
-			               && !n.hadRecentSuccess()
-			               &&  p.template.childs.length > 2) {
-				           p.template.childs[2].activateFrom(p);
-					   return;
-				       }
-		                       break;
-
-		case DeactivationCodeCode: p.success = isActively && n.hadRecentSuccess();
-				      p.doCode(p.codeIndex()); //do not override success
-				      break;
-		case RootCode: 
-		case       LaunchedExpressionCode:
-                                      n.parOpAncestor.remove();
-				      break;
-
-		case         NotOperatorCode:
-		case ReactiveNotOperatorCode:
-		case      NotSeqOperatorCode:
-		case  CommunicationDeclarationCode:
-		case        ChannelDeclarationCode:
-		case    SendChannelDeclarationCode:
-		case ReceiveChannelDeclarationCode: p.childDeactivates(n, isActively); break;
-		}
-		n.parent        = null;
-		n.parOpAncestor = null;
-
-		if (n.next!=null)    n.next.prev       = n.prev;
-		else                 p.firstChild.prev = n.prev;
-		if (n!=p.firstChild) n.prev.next       = n.next;
-		else                 p.firstChild      = n.next;
-
-		p.activeChilds--;
-		if (p.activeChilds>0) return;
+            if (FromJava.doCallbackDeactivate()) {
+                FromJava.debugger.callbackDeactivate (n);
+            }
+			switch (p.template.typeCode) {
+			case SuspendOperatorCode: 
+				{
+					SpecificOperand s = n.parOpAncestor;
+					if (s.hasSuspended) {
+						s.hasSuspended = false;
+						s.suspendOrResumeLeftSiblings(false);
+					}
+				}
+				// NO break
+			case      ParAndOperatorCode:
+			case  ParOrOperatorCode: n.parOpAncestor.remove(); break;
+			case ParBreakOperatorCode:
+			case    ParOr2OperatorCode: n.parOpAncestor.remove();
+					   if (isActively && n.hadRecentSuccess())
+					       for (m=p.firstChild; m!=null; m=m.next)
+						   if(m!=n) m.parOpAncestor.excludeRequests();
+					   break;
+			case  ParAnd2OperatorCode: n.parOpAncestor.remove();
+					  if (isActively && !n.hadRecentSuccess())
+					       for (m=p.firstChild; m!=null; m=m.next)
+						   if(m!=n) m.parOpAncestor.excludeRequests();
+					   break;
+	
+			case ConditionalScriptExpressionCode: if (isActively
+				               &&  n.template.indexAsChild==0
+				               && !n.hadRecentSuccess()
+				               &&  p.template.childs.length > 2) {
+					           p.template.childs[2].activateFrom(p);
+						   return;
+					       }
+			                       break;
+	
+			case DeactivationCodeCode: p.success = isActively && n.hadRecentSuccess();
+					      p.doCode(p.codeIndex()); //do not override success
+					      break;
+			case RootCode: 
+			case       LaunchedExpressionCode:
+	                                      n.parOpAncestor.remove();
+					      break;
+	
+			case         NotOperatorCode:
+			case ReactiveNotOperatorCode:
+			case      NotSeqOperatorCode:
+			case  CommunicationDeclarationCode:
+			case        ChannelDeclarationCode:
+			case    SendChannelDeclarationCode:
+			case ReceiveChannelDeclarationCode: p.childDeactivates(n, isActively); break;
+			}
+			n.parent        = null;
+			n.parOpAncestor = null;
+	
+			if (n.next!=null)    n.next.prev       = n.prev;
+			else                 p.firstChild.prev = n.prev;
+			if (n!=p.firstChild) n.prev.next       = n.next;
+			else                 p.firstChild      = n.next;
+	
+			p.activeChilds--;
+			if (p.activeChilds>0) return;
 	    }
 	}
 
@@ -1217,7 +1235,7 @@ if(doTrace)n.trace("D>");
 	/**
 	 * add a child node:
          * set the parent variable; adjust the active count.
-	 * insert the child into the semi-closed double linked list of sibblings
+	 * insert the child into the semi-closed double linked list of siblings
 	 * ensure next==null
 	 */
 	void addChild (Node theChild)
@@ -1271,10 +1289,10 @@ if (false)if(doTrace) trace ("ADDING CHILD: ");
 	/** parent in main run-time tree */
 	public NodeInterface parent() {return parent;}
 
-	/** previous sibbling in main run-time tree */
+	/** previous sibling in main run-time tree */
 	public NodeInterface prev() {return prev;}
 
-	/** next sibbling in main run-time tree */
+	/** next sibling in main run-time tree */
 	public NodeInterface next() {return next;}
 
 	/** first child */

@@ -92,11 +92,10 @@ abstract class ParallelNode extends OperatorNode {
 		return result;
 	}
 
-	void successOccursInChild(Node theChild) {
+	void atomicActionHappensInChild(Node theChild) {
 		if (theChild.hadRecentSuccess())
 			recentlySuccessfulChilds--;
-		if (theChild.cycleAtCreation == cycle && isIteration) // continue ..
-																// iteration
+		if (theChild.cycleAtCreation == cycle && isIteration) // continue .. iteration
 		{
 			cycle++;
 			int index = (indexOfActivatedOptionalExit + 1)

@@ -39,7 +39,7 @@ abstract class CodeFragmentNode extends RequestNodeWithDuration implements Tryab
 	/**
 	 * schedule this request in the successes list
 	 */
-	void scheduleSuccess() {addToRequestList(rootNode.successes);}
+	void scheduleSuccess() {addToRequestList(rootNode.successfulCFs);}
 	/**
 	 * remove this request from its request list
 	 */
