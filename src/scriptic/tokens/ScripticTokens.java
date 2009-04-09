@@ -48,6 +48,7 @@ public interface ScripticTokens extends JavaTokens {
    public final static int DoubleQuestionToken           = FirstScripticToken + 38;
    public final static int DoubleExclamationToken        = FirstScripticToken + 39;
    public final static int AtSignToken                   = FirstScripticToken + 40;
+   public final static int HashToken                     = FirstScripticToken + 41;
 
 }
 

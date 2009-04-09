@@ -20,7 +20,7 @@ package scriptic.tools;
 import java.util.ArrayList;
 
 class LocalTypeDeclaration extends LocalOrNestedTypeDeclaration {
-  ArrayList<LocalTypeDeclaration> localTypesContext; // with: this, sibblings and LocalTypeDeclaration in outer blocks
+  ArrayList<LocalTypeDeclaration> localTypesContext; // with: this, siblings and LocalTypeDeclaration in outer blocks
   public int languageConstructCode () {return LocalTypeDeclarationCode;}
   public int getAllowedModifiers   () {return 0;}
   public ClassType makeNewClassType() {

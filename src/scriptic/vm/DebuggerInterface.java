@@ -24,7 +24,7 @@ package scriptic.vm;
  *  the main loop: the main loop of a main script process starts a new pass 
  *  activate:      a new node is   activated in the run-time tree
  *  deactivate:    a     node is deactivated in the run-time tree
- *  has success:   a 'sure' code fragment is about to be executed,
+ *  atomicActionHappens: a 'sure' code fragment is about to be executed,
  *                 or an unsure code fragment has just been executed successfully
  *  execute code:  some code is going to be executed; either
  *                 - a code fragment (sure, unsure, threaded, tiny, event handling)
@@ -37,7 +37,7 @@ public interface DebuggerInterface {
     public void callbackMainloop   (NodeInterface node);
     public void callbackActivate   (NodeInterface node);
     public void callbackDeactivate (NodeInterface node);
-    public void callbackHasSuccess (NodeInterface node);
+    public void callbackAtomicActionHappens (NodeInterface node);
     public void callbackExecuteCode(NodeInterface node);
     public void callbackSucceed    (NodeInterface node);
 }

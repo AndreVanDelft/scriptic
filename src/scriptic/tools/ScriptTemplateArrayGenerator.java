@@ -233,6 +233,7 @@ class ScriptTemplateArrayGenerator extends ScripticParseTreeEnumerator
       switch (expression.operator) {
       case BooleanAndToken : constructCode =    ParAnd2OperatorCode; break;
       case BooleanOrToken  : constructCode =     ParOr2OperatorCode; break;
+      case HashToken       : constructCode =    SuspendOperatorCode; break;
       case PlusToken       : constructCode =        OrOperatorCode; break;
       case SlashToken      : constructCode =  ParBreakOperatorCode; break;
       case AmpersandToken  : constructCode =       ParAndOperatorCode; break;

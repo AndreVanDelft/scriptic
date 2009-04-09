@@ -26,20 +26,20 @@ final class UnsureCodeFragmentNode extends CodeFragmentNode {
         boolean isRetrying;
 
 	final void scheduleRequest() {
-	    if ((subRootNode instanceof CommNode)
-            && ((CommNode) subRootNode).partners == null) 
+	    //if ((subRootNode instanceof CommNode)
+        //    && ((CommNode) subRootNode).partners == null) 
 	         addToRequestList (rootNode.unsureCFs);
-	    else addToRequestList (rootNode.pendingCFs);
+	    //else addToRequestList (rootNode.pendingCFs);
 	}
 
 	final public Boolean tryOutInBoundMode(boolean wasUnbound) {
 if (doTrace) trace("tryOutInBoundMode: ");
 	    doCode();
 	    if (success==Boolean.TRUE) {
-		    // note: hasSuccess must come first. Then the listOwner.current
+		    // note: atomicActionHappens must come first. Then the listOwner.current
 		    // may be set to the nextReq for the subRootNode.hasActivity loop;
 		    // only then deschedule is possible
-		    hasSuccess();
+		    atomicActionHappens();
 		    listOwner.current = (CodeFragmentNode) nextReq;
 		    deschedule(); 
 		    scheduleSuccess();

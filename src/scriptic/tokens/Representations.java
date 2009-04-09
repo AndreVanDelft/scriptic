@@ -169,6 +169,7 @@ public class Representations implements ScripticTokens, ScripticRepresentations,
 		      makeRepresentation (DoubleQuestionRepresentation,           DoubleQuestionToken);
 		      makeRepresentation (DoubleExclamationRepresentation,        DoubleExclamationToken);
 		      makeRepresentation (AtSignRepresentation,                   AtSignToken);
+		      makeRepresentation (HashRepresentation,                     HashToken);
 		      makeRepresentation (ScriptRepresentation,              ScriptToken);
 		      makeRepresentation (ScriptsRepresentation,             ScriptsToken);
 
@@ -310,6 +311,7 @@ public class Representations implements ScripticTokens, ScripticRepresentations,
 		      TokenNames [ DoubleQuestionToken     ] = "DoubleQuestionToken";
 		      TokenNames [ DoubleExclamationToken  ] = "DoubleExclamationToken";
 		      TokenNames [ AtSignToken             ] = "AtSignToken";
+		      TokenNames [ HashToken               ] = "HashToken";
 		      TokenNames [ ScriptToken             ] = "ScriptToken";
 		      TokenNames [ ScriptsToken            ] = "ScriptsToken";
 		   }
@@ -361,6 +363,7 @@ public class Representations implements ScripticTokens, ScripticRepresentations,
 		     scripticParseTreeCodeRepresentations [                  ParAndOperatorCode] = "ParOperator";
 		     scripticParseTreeCodeRepresentations [               ParAnd2OperatorCode] = "ParAnd2Operator";
 		     scripticParseTreeCodeRepresentations [                ParOr2OperatorCode] = "ParOr2Operator";
+		     scripticParseTreeCodeRepresentations [              SuspendOperatorCode] = "SuspendOperator";
 		     scripticParseTreeCodeRepresentations [                   OrOperatorCode] = "OrOperator";
 		     scripticParseTreeCodeRepresentations [                  SeqOperatorCode] = "SeqOperator";
 		     scripticParseTreeCodeRepresentations [               NotSeqOperatorCode] = "NotSeqOperator";
@@ -507,6 +510,7 @@ public class Representations implements ScripticTokens, ScripticRepresentations,
 		      case DoubleQuestionToken           : 
 		      case DoubleExclamationToken        : 
 		      case AtSignToken                   : 
+		      case HashToken                     : 
 		      }
 		   }
 }

@@ -30,7 +30,7 @@ public static void main(String args[]) {}
      public static int CALLBACK_MAINLOOP     = 0x0001;
      public static int CALLBACK_ACTIVATE     = 0x0002;
      public static int CALLBACK_DEACTIVATE   = 0x0004;
-     public static int CALLBACK_HAS_SUCCESS  = 0x0008;
+     public static int CALLBACK_ATOMIC_ACTION_HAPPENS  = 0x0008;
      public static int CALLBACK_EXECUTE_CODE = 0x0010;
      public static int CALLBACK_SUCCEED      = 0x0020;
 
@@ -56,7 +56,7 @@ public static void main(String args[]) {}
     static boolean doCallbackMainloop   () {return (debuggerBits & CALLBACK_MAINLOOP    ) != 0;}
     static boolean doCallbackActivate   () {return (debuggerBits & CALLBACK_ACTIVATE    ) != 0;}
     static boolean doCallbackDeactivate () {return (debuggerBits & CALLBACK_DEACTIVATE  ) != 0;}
-    static boolean doCallbackHasSuccess () {return (debuggerBits & CALLBACK_HAS_SUCCESS ) != 0;}
+    static boolean doCallbackAtomicActionHappens () {return (debuggerBits & CALLBACK_ATOMIC_ACTION_HAPPENS ) != 0;}
     static boolean doCallbackExecuteCode() {return (debuggerBits & CALLBACK_EXECUTE_CODE) != 0;}
     static boolean doCallbackSucceed    () {return (debuggerBits & CALLBACK_SUCCEED     ) != 0;}
 

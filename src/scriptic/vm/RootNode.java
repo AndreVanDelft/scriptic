@@ -19,6 +19,7 @@
 package scriptic.vm;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is for the root node in the runtime tree.
@@ -58,7 +59,7 @@ final class RootNode extends Node
             if (!   pendingCFDs.isEmpty()) result.append(   pendingCFDs).append("\n");
             if (!       busyCFs.isEmpty()) result.append(       busyCFs).append("\n");
             if (!      busyCFDs.isEmpty()) result.append(      busyCFDs).append("\n");
-            if (!     successes.isEmpty()) result.append(     successes).append("\n");
+            if (!     successfulCFs.isEmpty()) result.append(     successfulCFs).append("\n");
             if (!successfulCFDs.isEmpty()) result.append(successfulCFDs).append("\n");
             if (! ehcfSuccesses.isEmpty()) result.append( ehcfSuccesses).append("\n");
 
@@ -131,7 +132,7 @@ final class RootNode extends Node
         /** 
          * add a child node: 
          * set the parent variable; adjust the active count.
-         * insert the child into the semi-closed double linked list of sibblings
+         * insert the child into the semi-closed double linked list of siblings
          * ensure next==null
          */
         void addChild (Node child)
@@ -146,7 +147,7 @@ final class RootNode extends Node
         DurationList successfulCFDs        = new DurationList(this, "successfulCFDs");
         RequestList  pendingCFs            = new RequestList (this, "pendingCFs");
         RequestList  busyCFs               = new RequestList (this, "busyCFs"); // {*...*}
-        RequestList  successes             = new RequestList (this, "successes");
+        RequestList  successfulCFs             = new RequestList (this, "successes");
         RequestList  ehcfSuccesses         = new RequestList (this, "ehcfSuccesses");
         RequestList  succeededRequests     = new RequestList (this, "succeededRequests");
         ArrayList<Node> nodesToBeDeactivated  = new ArrayList<Node>(); // to be emptied completely every time
@@ -196,8 +197,8 @@ if (doTrace) node.trace("markForDeactivation: ");
                   // the next lines also appear in class EventHandlingCodeFragmentNode;
                   // it closely resembles as well the section 'handle successes' below:
                   if (!r.isIteration||r.pass==0)
-                  {   // otherwise hasSuccess has already been called...
-                      r.hasSuccess();
+                  {   // otherwise atomicActionHappens has already been called...
+                      r.atomicActionHappens();
                   }
                   // NOT scheduleSuccess(); because then priorities would mess things up a bit.
                   // instead, do now like subRootNodes handling scheduled Successes:
@@ -209,123 +210,6 @@ if (doTrace) node.trace("markForDeactivation: ");
             }
         }
 
-        /**
-         * try to do something at own requests and allow other subrootnodes the same
-         * and return whether anything remains to be done:
-         *
-         * enter the critical section
-         *   if there is nothing more to do, exit
-         *   try the private fragments with at least the same priority as the round
-         *   let successes with timeToGo=0 succeed
-         * exit the critical section
-         * return true: there is more work to do
-         *
-         * outside the critical section, the other threads in the same launched thread
-         * get the chance to try code fragments and to let successes succeed (shared mutex!)
-         */
-  /*
-        boolean hasActivity()
-        {
-            CodeFragmentNode f;
-            RequestNode      r, nextR;
-
-            enterMutex(this);
-
-            if (doTrace) {
-                traceOutput("============================================");
-                traceOutput(infoNested());
-            }
-
-            // check for work to do
-            if (firstChild==null) {
-                if (doTrace) traceOutput("--STOPPING-----------------------------------");
-                removeFromRequestList();
-                exitMutex(this);
-                return false;
-            }
-
-            if (FromJava.doCallbackMainloop()) {
-                FromJava.debugger.callbackMainloop (this);
-            }
-
-            if (doTrace) traceOutput("--------------------------------------------");
-
-            // 'try' the pending fragments with at least the same priority;
-            // if such a priority is higher, then adjust the round's priority
-            pendingCFs.current = (CodeFragmentNode) pendingCFs.first;
-        for(;;) {
-            f = pendingCFs.current;
-            if (f==null || f.priority<priority) break;
-                if (doTrace) f.trace("T>");
-            if (f.tryOut())
-            {
-                    if (doTrace) f.trace("T OK>");
-                    success  = true;
-                if (doTrace&&priority!=f.priority) trace("round priority now: "+f.priority+"  ");
-                priority = f.priority; // should have no effect...
-                }
-                else f.trace("ERROR: UNEXPECTED T FAIL>");
-            }
-            pendingCFDs.current = (CodeFragmentNode) pendingCFDs.first;
-        for(;;) {
-            f = pendingCFDs.current;
-            if (f==null || f.priority<priority) break;
-                if (doTrace) f.trace("T>");
-            if (f.tryOut())
-            {
-                    if (doTrace) f.trace("T OK>");
-                    success  = true;
-                if (doTrace&&priority!=f.priority) trace("round priority now: "+f.priority+"  ");
-                priority = f.priority; // should have no effect...
-                }
-                else f.trace("ERROR: UNEXPECTED T FAIL>");
-            }
-
-        handleEHCFSuccesses();
-
-            // handle successes
-        if(doTrace) traceOutput("Handle Successes> "+successes);
-            r = successes.first;
-            if (r != null && r.priority == priority) {
-                for (; r != null; r = nextR) {
-                nextR = r.nextReq;
-                if (r.priority < priority) 
-                    break;
-                if (doTrace) r.trace("s>");
-                r.removeFromRequestList(); 
-                r.parOpAncestor.firstReq = null;  // faster than removeFromParOpList()
-                    // possible because there was only one elt in the list, namely: r
-                r.succeed();
-                r.duration = 0.;
-                r.addToRequestList(succeededRequests);
-            }
-            }
-        if(doTrace) traceOutput("Handle successfulCFDs> "+successfulCFDs);
-        r = successfulCFDs.first;
-        if (r != null && r.priority == priority) {
-            for (; r != null; r = nextR) {
-                nextR = r.nextReq;
-                if (r.priority < priority
-                ||  r.duration != 0) 
-                    break;
-                if (doTrace) r.trace("s>");
-                r.removeFromRequestList(); 
-                r.parOpAncestor.firstReq = null;  // faster than removeFromParOpList()
-                    // possible because there was only one elt in the list, namely: r
-                r.succeed();
-                r.duration = 0.;
-                    r.addToRequestList(succeededRequests);
-            }
-            }
-
-            handleSucceededRequests();
-            handleNodesToBeDeactivated();
-            pass++;
-        //repositionInBusyList();
-            exitMutex(this);
-            return true;
-        }
-*/
         void handleSucceededRequests() {
             RequestNode r = null; //otherwise error: variable might not have been initialized
             for (;;)
@@ -345,18 +229,32 @@ if (doTrace) node.trace("markForDeactivation: ");
         void tick (int thePriority, double theDuration)
         {
             duration -= theDuration;
-            CodeFragmentNode r;
-            for (r=(CodeFragmentNode)busyCFDs.first; r!=null; r=(CodeFragmentNode)r.nextReq) {
+            tick(thePriority, theDuration, busyCFDs);
+            tick(thePriority, theDuration, pendingCFDs);
+            tick(thePriority, theDuration, successfulCFDs);
+        }
+        void tick (int thePriority, double theDuration, DurationList durationList)
+        {
+        	List<CodeFragmentNode> suspendedRequests = new ArrayList<CodeFragmentNode>();
+        	CodeFragmentNode next; // needed because suspended requests will be taken out
+            for (CodeFragmentNode r=(CodeFragmentNode)durationList.first; r!=null; r=next) 
+            {
+            	next = (CodeFragmentNode)r.nextReq; 
                 if (r.priority < thePriority) break;
-                r.duration -= theDuration;
+                if (r.isSuspended()) {
+                	r.removeFromRequestList(); //temporary removal to be followed by addition,
+                	// so that correct ordering by priority and duration will be restored
+                	suspendedRequests.add(r);
+                }
+                else
+                {
+                  r.duration -= theDuration;
+                }
             }
-            for (r=(CodeFragmentNode)pendingCFDs.first; r!=null; r=(CodeFragmentNode)r.nextReq) {
-                if (r.priority < thePriority) break;
-                r.duration -= theDuration;
-            }
-            for (r=(CodeFragmentNode)successfulCFDs.first; r!=null; r=(CodeFragmentNode)r.nextReq) {
-                if (r.priority < thePriority) break;
-                r.duration -= theDuration;
+            for (CodeFragmentNode r: suspendedRequests)
+            {
+            	// add in correct duration order
+            	r.addToDurationList(durationList);
             }
         }
 
@@ -477,7 +375,7 @@ void t(int i) {System.out.print(""+i+" ");System.out.flush();}
             priority = MIN_PRIORITY;
             r =       busyCFs .first; if (r!=null && priority<r.priority) priority=r.priority;
             r =       busyCFDs.first; if (r!=null && priority<r.priority) priority=r.priority;
-            r =      successes.first; if (r!=null && priority<r.priority) priority=r.priority;
+            r =      successfulCFs.first; if (r!=null && priority<r.priority) priority=r.priority;
             r = successfulCFDs.first; if (r!=null && priority<r.priority) priority=r.priority;
             r =    pendingCFs .first; if (r!=null && priority<r.priority) priority=r.priority;
             r =    pendingCFDs.first; if (r!=null && priority<r.priority) priority=r.priority;
@@ -511,7 +409,8 @@ void t(int i) {System.out.print(""+i+" ");System.out.flush();}
                 if (f==null||f.priority < priority) break;
                 if (doTrace) f.trace("UT>");
 
-                if (f.tryOut()==Boolean.TRUE)
+                if (!f.isSuspended() 
+                &&   f.tryOut()==Boolean.TRUE)
                 {
                     if (doTrace) f.trace("UT OK>");
                     success  = Boolean.TRUE;
@@ -519,7 +418,7 @@ void t(int i) {System.out.print(""+i+" ");System.out.flush();}
                     if (doTrace) trace("round priority now: "+priority+"  ");
                 }
                 else {
-                    if (doTrace) f.trace("UT FAIL>");
+                    if (doTrace && !f.isSuspended()) f.trace("UT FAIL>");
                     //NOTE: both tookUnboundCF and tookUnboundCFD may be true!!!
                          if (tookUnboundCFD)unboundCFDs.current = (CodeFragmentNode) f.nextReq;
                     else if (tookUnboundCF ) unboundCFs.current = (CodeFragmentNode) f.nextReq;
@@ -532,8 +431,10 @@ void t(int i) {System.out.print(""+i+" ");System.out.flush();}
             for(;;) {
 
                 f = pendingCFs.current;
+                while (f!=null && f.isSuspended()) {
+                	f = (CodeFragmentNode) f.nextReq;
+                }
                 if (f==null || f.priority < priority) break;
-
                 if (doTrace) f.trace("T>");
                 if (f.tryOut()==Boolean.TRUE) {
                 	success = Boolean.TRUE; 
@@ -546,6 +447,9 @@ void t(int i) {System.out.print(""+i+" ");System.out.flush();}
             pendingCFDs.current = (CodeFragmentNode) pendingCFDs.first;
             for(;;) {
                 f = pendingCFDs.current;
+                while (f!=null && f.isSuspended()) {
+                	f = (CodeFragmentNode) f.nextReq;
+                }
                 if (f==null || f.priority < priority) break;
                 if (doTrace) f.trace("T>");
                 if (f.tryOut()==Boolean.TRUE) {
@@ -604,17 +508,17 @@ void t(int i) {System.out.print(""+i+" ");System.out.flush();}
                     // then ... UNBOUND FRAGMENTS DO NO HARM ...
 
                     determineDuration: {
-                      r = pendingCFs.first;    if (r!=null &&  priority == r.priority) {duration=NO_DURATION; break determineDuration;}
-                      r =    busyCFs.first;    if (r!=null &&  priority == r.priority) {duration=NO_DURATION; break determineDuration;}
-                      r =  successes.first;    if (r!=null &&  priority == r.priority) {duration=NO_DURATION; break determineDuration;}
-                      r = unboundCFDs.first;   if (r!=null &&  priority == r.priority) {duration=r.duration;}
-
-                      r = pendingCFDs.first;   if (r!=null &&  priority == r.priority
-                                                           &&  duration  > r.duration) duration=r.duration;
-                      r = busyCFDs.first;      if (r!=null &&  priority == r.priority
-                                                           &&  duration  > r.duration) duration=r.duration;
-                      r = successfulCFDs.first;if (r!=null &&  priority == r.priority
-                                                           &&  duration  > r.duration) duration=r.duration;
+                      r =     pendingCFs.firstNonSuspended(); if (r!=null &&  priority == r.priority) {duration=NO_DURATION; break determineDuration;}
+                      r =        busyCFs.firstNonSuspended(); if (r!=null &&  priority == r.priority) {duration=NO_DURATION; break determineDuration;}
+                      r =  successfulCFs.firstNonSuspended(); if (r!=null &&  priority == r.priority) {duration=NO_DURATION; break determineDuration;}
+                      r =    unboundCFDs.firstNonSuspended(); if (r!=null &&  priority == r.priority) {duration=r.duration;}
+ 
+                      r =    pendingCFDs.firstNonSuspended(); if (r!=null &&  priority == r.priority
+                                                                          &&  duration  > r.duration) duration=r.duration;
+                      r =       busyCFDs.firstNonSuspended(); if (r!=null &&  priority == r.priority
+                                                                          &&  duration  > r.duration) duration=r.duration;
+                      r = successfulCFDs.firstNonSuspended(); if (r!=null &&  priority == r.priority
+                                                                          &&  duration  > r.duration) duration=r.duration;
 
                       // unsure code fragments get intermittendly a chance to set the time to elapse to 0
                       if (hasWaitedForUnsureCFs) {
@@ -626,7 +530,7 @@ void t(int i) {System.out.print(""+i+" ");System.out.flush();}
                         }
                       }
                     }
-                    FromJava.shouldWaitForUserInput &= successes       .first == null
+                    FromJava.shouldWaitForUserInput &= successfulCFs       .first == null
                                                     && successfulCFDs  .first == null
                                                     && unboundCFs      .first == null
                                                     && unboundCFDs     .first == null
@@ -653,10 +557,14 @@ void t(int i) {System.out.print(""+i+" ");System.out.flush();}
                 tick(priority, duration);
     
                 // handle successes
-                for (r=successes.first; r != null; r = nextR) {
+                for (r=successfulCFs.first; r != null; r = nextR) {
                     nextR = r.nextReq;
                     if (r.priority < priority) 
                         break;
+                    if (r.isSuspended())
+                    {
+                    	continue;
+                    }
                     if (doTrace) r.trace("s>");
                     r.removeFromRequestList(); 
                     r.parOpAncestor.firstReq = null;  // faster than removeFromParOpList()
@@ -669,6 +577,10 @@ void t(int i) {System.out.print(""+i+" ");System.out.flush();}
                     if (r.priority < priority
                     ||  r.duration > 0) 
                         break;
+                    if (r.isSuspended())
+                    {
+                    	continue;
+                    }
                     if (doTrace) r.trace("s>");
                     r.removeFromRequestList(); 
                     r.parOpAncestor.firstReq = null;  // faster than removeFromParOpList()
@@ -695,6 +607,6 @@ void t(int i) {System.out.print(""+i+" ");System.out.flush();}
                 ||               busyCFs.first != null
                 ||              busyCFDs.first != null
                 ||        successfulCFDs.first != null
-                ||             successes.first != null;
+                ||         successfulCFs.first != null;
         }
 }

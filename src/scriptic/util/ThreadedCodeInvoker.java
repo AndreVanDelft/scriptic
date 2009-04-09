@@ -62,7 +62,7 @@ public class ThreadedCodeInvoker implements scriptic.vm.CodeInvokerThreaded {
 			thread.interrupt();
 		}
 	}
-	public boolean interrupted() {
+	public boolean isInterrupted() {
 		return isInterrupted;
 	}
 	public boolean isAlive() {

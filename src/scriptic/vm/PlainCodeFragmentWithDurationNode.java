@@ -33,10 +33,10 @@ final class PlainCodeFragmentWithDurationNode extends PlainCodeFragmentNode {
 	}
 	
 	final public Boolean tryOutInBoundMode(boolean wasUnbound) {
-        // note: hasSuccess must come first. Then the listOwner.current
+        // note: atomicActionHappens must come first. Then the listOwner.current
         // may be set to the nextReq for the subRootNode.hasActivity loop;
         // only then deschedule is possible
-	    hasSuccess();
+	    atomicActionHappens();
 	    listOwner.current = (CodeFragmentNode) nextReq;
 	    deschedule(); 
 		if ((template.codeBits & TemplateCodes.AsyncFlag)!=0)

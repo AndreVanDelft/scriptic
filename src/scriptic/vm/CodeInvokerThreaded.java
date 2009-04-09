@@ -23,5 +23,5 @@ public interface CodeInvokerThreaded {
   void interrupt();
   void join() throws InterruptedException;
   boolean isAlive();
-  boolean interrupted();
+  boolean isInterrupted();
 }

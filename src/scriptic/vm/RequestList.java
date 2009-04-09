@@ -29,6 +29,16 @@ class RequestList {
     Object owner;
     String name;
     RequestNode first = null;
+    RequestNode firstNonSuspended() {
+    	for (RequestNode r=first; r!=null; r=r.nextReq)
+    	{
+    		if (!r.isSuspended())
+    		{
+    			return r;
+    		}
+    	}
+    	return null;
+    }
     CodeFragmentNode current; // used when trying code fragments
     RequestList(Object owner,String s) {this.owner=owner; name=s;}
     boolean isEmpty() {return first==null;}

@@ -61,10 +61,15 @@ abstract class SpecificOperand {
         }
 
 	long        passOfSuccess;
-	long        ticks;
+	/** 
+	 * the number of atomic actions that have started happening (and possibly finished)
+	 * somewhere lower in the hierarchy
+	 */
+	long        ticks; 
 	long        stamp; // for determining whether requests can be partners
 	RequestNode firstReq;
 	Node        node;
+	boolean     hasSuspended; // relevant for operands of suspendOperator #
 
 	SpecificOperand firstChild = null, parent = null, next = null, prev = null;
 
@@ -93,7 +98,7 @@ if (false) Node.traceOutput(parent.infoNested(0)+"DONE");
 	}
 
 	/** 
-	 * all subthreads and (then) all requests in this and (grand)childs 
+	 * all requests in this and (grand)childs 
 	 * are to be descheduled and deactivated,
 	 * probably because an exclusive code fragment succeeded
 	 */
@@ -104,10 +109,44 @@ if (false) Node.traceOutput(parent.infoNested(0)+"DONE");
 	    //}
 	    for (RequestNode r=firstReq; r!=null; r=theNext) {
 	        theNext = r.nextInParOp;
-		r.exclude();
+		    r.exclude();
 	    }
 	    for (SpecificOperand s=firstChild; s!=null; s=s.next) {
-		s.excludeRequests();
+		    s.excludeRequests();
+	    }
+	}
+	/** 
+	 * all requests in this and (grand)childs 
+	 * are to be suspended or resumed,
+	 */
+	final void suspendOrResumeRequests (boolean doSuspend) {
+	    RequestNode theNext;
+	    //for (ThreadNode t=firstThread; t!=null; t=t.nextThread) {
+		//t.stop();
+	    //}
+	    for (RequestNode r=firstReq; r!=null; r=theNext) {
+	        theNext = r.nextInParOp;
+		    r.incSuspendedCount(doSuspend);
+	    }
+	    for (SpecificOperand s=firstChild; s!=null; s=s.next) {
+		    s.suspendOrResumeRequests(doSuspend);
+	    }
+	}
+	public void excludeRightSiblingsWithTick() {
+	    SpecificOperand s, nextS;
+	    for (s=this.next; s!=null; s=nextS) {
+		  nextS = s.next;
+		  if (s.ticks>0)
+		  {
+    		  s.excludeRequests();
+		  }
+	    }
+	}
+	public void suspendOrResumeLeftSiblings(boolean suspend) {
+	    SpecificOperand s, nextS;
+	    for (s=parent.firstChild; s!=this; s=nextS) {
+		  nextS = s.next;
+		  s.suspendOrResumeRequests(suspend);
 	    }
 	}
 }
