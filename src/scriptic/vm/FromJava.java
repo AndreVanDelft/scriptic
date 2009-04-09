@@ -215,6 +215,9 @@ public static void main(String args[]) {}
         synchronized (anchor) {
 	      for (RequestNode n = requestList.first; n!=null; n = n.nextReq)
 		  {
+	    	  if (n.isSuspended()) {
+	    		  continue;
+	    	  }
 	    	  EventHandlingCodeFragmentNode ehcfn = (EventHandlingCodeFragmentNode) n;
              if (ehcfn.tryOut()==Boolean.TRUE) {
 		        doNotify();

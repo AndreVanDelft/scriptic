@@ -85,7 +85,7 @@ public class LookupFrame2 extends JFrame {
     public boolean confirmExit() {
       return JOptionPane.OK_OPTION
           == JOptionPane.showConfirmDialog(this,
-               "Are you sure", "Click OK to exit", JOptionPane.OK_CANCEL_OPTION);
+               "Are you sure?", "Click OK to exit", JOptionPane.OK_CANCEL_OPTION);
     }
 
     //////////////////////////////////////////////
