@@ -31,4 +31,4 @@ There are some unusual applications of Process Algebra. A few are listed below. 
 
 [http://alexandria.tue.nl/extra2/200412146.pdf Hybrid Process Algebra]
 
-[http://www.informaworld.com/smpp/411815581-22007900/content~content=a779887766~db=all~order=pageSpecifications in stochastic process algebra for a robot control problem]
+[http://www.informaworld.com/smpp/411815581-22007900/content~content=a779887766~db=all~order=page Specifications in stochastic process algebra for a robot control problem]
