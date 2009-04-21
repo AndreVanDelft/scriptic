@@ -21,6 +21,8 @@ There are some unusual applications of Process Algebra. A few are listed below. 
 
 [http://www.math.uu.se/~david/web/Sumpter04.pdf Understanding and Approximating Process Algebra Models of Biological Systems]
 
+[http://signalproject.org/Documents/CiocchettaHillstonFBTC.pdf Bio-PEPA: an extension of the process algebra PEPA for biochemical networks]
+
 == Physics ==
 
 [http://arxiv.org/PS_cache/quant-ph/pdf/0312/0312067v1.pdf Toward a Quantum Process Algebra]
