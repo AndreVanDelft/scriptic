@@ -1,7 +1,5 @@
 #summary Can Scriptic be used in some unusual application areas?
 
-= Introduction =
-
 There are some unusual applications of Process Algebra. A few are listed below. Could Scriptic support such applications?
 
 == Music ==
