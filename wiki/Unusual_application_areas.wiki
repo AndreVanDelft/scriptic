@@ -32,3 +32,9 @@ There are some unusual applications of Process Algebra. A few are listed below. 
 [http://alexandria.tue.nl/extra2/200412146.pdf Hybrid Process Algebra]
 
 [http://www.informaworld.com/smpp/411815581-22007900/content~content=a779887766~db=all~order=page Specifications in stochastic process algebra for a robot control problem]
+
+= Social Sciences =
+
+[http://superant.livejournal.com/2326.html Process algebra modeling of human communication  ]
+
+[http://www.infosci-journals.com/downloadPDF/pdf/ITJ3652_SWdAPOKOGN.pdf Formal description of the cognitive process of decision making]
