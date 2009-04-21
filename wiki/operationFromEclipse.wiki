@@ -2,7 +2,9 @@
 
 = How to compile and run Scriptic applications from Eclipse =
 
-You can compile and run Scriptic applications from Eclipse when you have checked out all sources using subversion. I assume here you have created a project named Scriptic. How to proceed:
+You can compile and run Scriptic applications from Eclipse when you have checked out all sources using Subversion. To do so, it is best to have the [http://subclipse.tigris.org/ Subclipse] plugin for Eclipse.
+
+I assume here you have created a project named Scriptic, with all the sources. How to proceed:
 
   * In Eclipse, start opening the Run Commands for editing
   * Add a command named "Compile Examples", in project Scriptic.
