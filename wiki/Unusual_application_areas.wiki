@@ -20,3 +20,5 @@ There are some unusual applications of Process Algebra. A few are listed below. 
 [http://www.nisis.risk-technologies.com/(S(lln55tu1kj0whzjwle4w5d45))/filedown.aspx?file=305 Survey 'Robustness in Immune System Models']
 
 [http://www.math.uu.se/~david/web/SumpterBlanchardBroomhead01.pdf Ant colony behavior]
+
+[http://www.math.uu.se/~david/web/Sumpter04.pdf Understanding and Approximating Process Algebra Models of Biological Systems]
