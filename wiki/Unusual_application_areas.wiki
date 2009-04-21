@@ -1,4 +1,4 @@
-Can Scriptic be used in some unusual application areas? 
+#summary Can Scriptic be used in some unusual application areas?
 
 = Introduction =
 
