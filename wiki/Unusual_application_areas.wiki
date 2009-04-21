@@ -4,7 +4,7 @@
 
 There are some unusual applications of Process Algebra. A few are listed below. Could Scriptic support such applications?
 
-= Music =
+== Music ==
 
 [http://www.google.com/search?rlz=1C1CHMI_nlNL292NL303&aq=f&sourceid=chrome&ie=UTF-8&q=mwsccs The Musical Weighted Synchronous Calculus of Communicating Systems]
 [http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.3474 A Process Algebra for Stochastic Music Composition (1995)]
@@ -13,7 +13,7 @@ There are some unusual applications of Process Algebra. A few are listed below. 
 
 [http://www.cosc.brocku.ca/~bross/research/BrazilSCM95.pdf MWSCCS: A Stochastic Concurrent Music Language]
 
-= Biology =
+== Biology ==
 
 [http://www.icms.org.uk/archive/ems/population/report.doc Uniting theoretical approaches to the biological problem of relating individual behaviour to population dynamics workshop 2004]
 
@@ -23,17 +23,17 @@ There are some unusual applications of Process Algebra. A few are listed below. 
 
 [http://www.math.uu.se/~david/web/Sumpter04.pdf Understanding and Approximating Process Algebra Models of Biological Systems]
 
-= Physics =
+== Physics ==
 
 [http://arxiv.org/PS_cache/quant-ph/pdf/0312/0312067v1.pdf Toward a Quantum Process Algebra]
 
-= Engineering =
+== Engineering ==
 
 [http://alexandria.tue.nl/extra2/200412146.pdf Hybrid Process Algebra]
 
 [http://www.informaworld.com/smpp/411815581-22007900/content~content=a779887766~db=all~order=page Specifications in stochastic process algebra for a robot control problem]
 
-= Social Sciences =
+== Social Sciences ==
 
 [http://superant.livejournal.com/2326.html Process algebra modeling of human communication  ]
 
