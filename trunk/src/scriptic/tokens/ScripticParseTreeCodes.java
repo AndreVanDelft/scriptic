@@ -61,6 +61,7 @@ public interface ScripticParseTreeCodes {
    public final static int             ZeroExpressionCode   =  26;
    public final static int              OneExpressionCode   =  27;
    public final static int            BreakExpressionCode   =  28;
+   public final static int           Ellipsis1OperandCode   =  33;
    public final static int            EllipsisOperandCode   =  29;
    public final static int           Ellipsis3OperandCode   =  30;
    public final static int         LaunchedExpressionCode   =  32;
