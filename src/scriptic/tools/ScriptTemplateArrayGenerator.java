@@ -266,9 +266,10 @@ class ScriptTemplateArrayGenerator extends ScripticParseTreeEnumerator
       case ParenthesisOpenToken : constructCode =     ZeroExpressionCode; break;
       case           MinusToken : constructCode =      OneExpressionCode; break;
       case           BreakToken : constructCode =    BreakExpressionCode; break;
+      case          PeriodToken : constructCode =   Ellipsis1OperandCode; break;
       case        EllipsisToken : constructCode =    EllipsisOperandCode; break;
       case       Ellipsis3Token : constructCode =   Ellipsis3OperandCode; break;
-      }
+     }
       addTemplateDescriptor(expression, constructCode,
     		  (expression.token==EllipsisToken||expression.token==Ellipsis3Token)
     		  ?IterationFlag: 0, false, null, null);

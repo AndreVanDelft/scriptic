@@ -681,6 +681,7 @@ default: Node.debugOutput("activateFrom(n,f,p) " + parentNode.getName() + " : " 
       case  ZeroExpressionCode:    break;
       case   OneExpressionCode:    result = Node.SuccessBit; break;
       case BreakExpressionCode:    result = Node.   ExitBit; break;
+      case Ellipsis1OperandCode:
           case EllipsisOperandCode:    result = Node.   SomeBit; // NO break
       /* case OP_NEUTRAL:*/        if (!parentNode.isWithOrLikeOptr()) result |= Node.SuccessBit; break;     
           case EllipsisOperatorCode:{int i = childs.length; if (i >  parentNode.pass)

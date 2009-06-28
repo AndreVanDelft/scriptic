@@ -456,7 +456,6 @@ public class ScripticParser extends JavaParser
                                  	          SlashToken,         //   /
                                  	          PercentToken,       //   %
                                  	          SemicolonToken,     //   ;
-                                 	          CommaToken,         //   ,
                                  	          EllipsisToken,       //   ..
                                  	          Ellipsis3Token      //   ...
                                            };
@@ -579,6 +578,7 @@ public class ScripticParser extends JavaParser
 
 
          case BreakToken:
+         case PeriodToken:
          case EllipsisToken:
          case Ellipsis3Token:
 
