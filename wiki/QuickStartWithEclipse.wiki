@@ -17,9 +17,10 @@ Unpack the zip archive in your Eclipse `workspace\` folder, yielding there a fol
     lib
 }}}
 
-Tell the Eclipse text editor that Scriptic source files are like Java source files:
- * In Eclipse, issue the menu command `Window|Preferences`.
- * In the Preferences dialog, select `General|Editors|File Associations`.
+Tell the Eclipse text editor that Scriptic source files are like Java source files, etc:
+ * In Eclipse, issue the menu command `Window|Preferences`, which makes the Preferences dialog appear
+ * Select `General|Workspace`, and switch on the check box `Refresh automatically`
+ * Select `General|Editors|File Associations`.
  * In the `File Associations` panel, click the link `Content Types`.
  * In the `Content Types` panel, open the map `Text`; click `Java Source File`.
  * Add file association for file type `*.sawa`.
@@ -30,8 +31,14 @@ In Eclipse, issue the menu command `File|New|Project` to create a new developmen
  * in the third page, `Java Settings`:
    * in tab `Source`, select the displayed folder `src`
      * click the link `Configure inclusion and exclusion filters`
-     * in the `Inclusion and Exclusion Patterns` dialog, enter *exclusion* pattern `*.sawa`, and click `Finish` to close the dialog
+     * in the `Inclusion and Exclusion Patterns` dialog, enter _*exclusion*_ pattern `*.sawa`, and click `Finish` to close the dialog
    * in tab `Libraries`, click button `Add External JARs...`
-     * using the `JAR Selection` dialog, add the files `sawa.jar` and `scripticvm.jar` that are present in folder `..../workspace/scriptic/lib`
+     * using the `JAR Selection` dialog, add from folder `..../workspace/scriptic/lib` the files `sawa.jar` and `scripticvm.jar` 
 
+Using the file manager outside Exclipse, copy the folder `Examples` from `..../workspace/scriptic/` into folder `..../workspace/Scriptic Demo/src`
 
+Create a Run Configuration for the Scriptic compiler:
+ * In Eclipse, issue the menu command `Run|Open Run Dialog` to open the dialog named `Create, manage, and run configurations`
+ * Double click `Java Application`; this creates a new configuration
+ * Change the name into `Compile Scriptic sources`
+ *
