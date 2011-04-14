@@ -78,8 +78,9 @@ Scriptic/Java compiler; open source software - GNU General Public License
   1458 done
 }}}
 
-Now create run configurations for the Examples:
+Now create run configurations for the Examples, for project _`Scriptic Demo`_:
  * _`QSim`_ with main class _`Examples.QSim`_ and arguments `1`
  * _`LookupFrame`_ with main class _`Examples.LookupFrame`_
+ * _`LookupFrame2`_ with main class _`Examples.LookupFrame2`_
  * _`Life`_ with main class _`Examples.LifeFrame`_
-And run these
+Run these. 
