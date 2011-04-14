@@ -24,3 +24,12 @@ Tell the Eclipse text editor that Scriptic source files are like Java source fil
  * In the `Content Types` panel, open the map `Text`; click `Java Source File`.
  * Add file association for file type `*.sawa`.
 
+In Eclipse, issue the menu command `File|New|Project` to start a wizard.
+ * create a new Java project
+ * name it for instance `Scriptic Demo`
+ * accept all default settings from the wizard, up to the page `Java Settings`
+ * in the `Java Settings` page
+   * in tab `Source`
+  page, `Libraries` tab, click button `Add External JARs...`
+
+
