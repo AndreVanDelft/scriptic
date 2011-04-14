@@ -1,0 +1,26 @@
+#summary Quick Start guide for Eclipse users
+
+= Introduction =
+
+If you have the development environment Eclipse installed (available from http://Eclipse.org, the following steps may get you started quickly.
+
+= Steps =
+
+Download the Scriptic All-in-1 zip archive from http://code.google.com/p/scriptic/downloads/detail?name=scriptic-all-in-one.zip
+
+Unpack the zip archive in your Eclipse `workspace\` folder, yielding there a folder hierarchy
+{{{
+  scriptic/
+    dimensions
+    doc
+    Examples
+    lib
+}}}
+
+Tell the Eclipse text editor that Scriptic source files are like Java source files:
+ * In Eclipse, issue the menu command `Window|Preferences`.
+ * In the Preferences dialog, select `General|Editors|File Associations`.
+ * In the `File Associations` panel, click the link `Content Types`.
+ * In the `Content Types` panel, open the map `Text`; click `Java Source File`.
+ * Add file association for file type `*.sawa`.
+
