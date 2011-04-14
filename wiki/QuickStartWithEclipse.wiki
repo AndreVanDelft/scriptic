@@ -8,7 +8,7 @@ If you have the development environment Eclipse installed (available from http:/
 
 Download the Scriptic All-in-1 zip archive from http://code.google.com/p/scriptic/downloads/detail?name=scriptic-all-in-one.zip
 
-Unpack the zip archive in your Eclipse `workspace\` folder, yielding there a folder hierarchy
+Unpack the zip archive in your Eclipse *`workspace\`* folder, yielding there a folder hierarchy
 {{{
   scriptic/
     dimensions
@@ -18,27 +18,69 @@ Unpack the zip archive in your Eclipse `workspace\` folder, yielding there a fol
 }}}
 
 Tell the Eclipse text editor that Scriptic source files are like Java source files, etc:
- * In Eclipse, issue the menu command `Window|Preferences`, which makes the Preferences dialog appear
- * Select `General|Workspace`, and switch on the check box `Refresh automatically`
- * Select `General|Editors|File Associations`.
- * In the `File Associations` panel, click the link `Content Types`.
- * In the `Content Types` panel, open the map `Text`; click `Java Source File`.
- * Add file association for file type `*.sawa`.
+ * In Eclipse, issue the menu command *`Window|Preferences`*, which makes the *Preferences* dialog appear
+ * Select *`General|Workspace`*, and switch on the check box *`Refresh automatically`*
+ * Select *`General|Editors|File Associations`*.
+ * In the *`File Associations`* panel, click the link *`Content Types`*.
+ * In the *`Content Types`* panel, open the map *`Text`*; click *`Java Source File`*.
+ * Add file association for file type *`*.sawa`*.
 
-In Eclipse, issue the menu command `File|New|Project` to create a new development project using a wizard.
- * in the first wizard page, select `Java project`, and go to the next page
- * in the second wizard page, name the new project, for instance `Scriptic Demo`, and go to the next page
- * in the third page, `Java Settings`:
-   * in tab `Source`, select the displayed folder `src`
-     * click the link `Configure inclusion and exclusion filters`
-     * in the `Inclusion and Exclusion Patterns` dialog, enter _*exclusion*_ pattern `*.sawa`, and click `Finish` to close the dialog
-   * in tab `Libraries`, click button `Add External JARs...`
-     * using the `JAR Selection` dialog, add from folder `..../workspace/scriptic/lib` the files `sawa.jar` and `scripticvm.jar` 
+In Eclipse, issue the menu command *`File|New|Project`* to create a new development project using a wizard.
+ * in the first wizard page, select *`Java project`*, and go to the next page
+ * in the second wizard page, name the new project, for instance *`Scriptic Demo`*, and go to the next page
+ * in the third page, *`Java Settings`*:
+   * in tab *`Source`*, select the displayed folder *`src`*
+     * click the link *`Configure inclusion and exclusion filters`*
+     * in the `Inclusion and Exclusion Patterns` dialog, enter _*exclusion*_ pattern *`**/*.sawa`*, and click *`Finish`* to close the dialog
+   * in tab *`Libraries`*, click button *`Add External JARs...`*
+     * using the *`JAR Selection`* dialog, add from folder *`..../workspace/scriptic/lib`* the files *`sawa.jar`* and *`scripticvm.jar`*
 
-Using the file manager outside Exclipse, copy the folder `Examples` from `..../workspace/scriptic/` into folder `..../workspace/Scriptic Demo/src`
+Using the file manager outside Eclipse, copy the folder *`Examples`* from *`..../workspace/scriptic/`* into folder *`..../workspace/Scriptic Demo/src`*
 
 Create a Run Configuration for the Scriptic compiler:
- * In Eclipse, issue the menu command `Run|Open Run Dialog` to open the dialog named `Create, manage, and run configurations`
- * Double click `Java Application`; this creates a new configuration
- * Change the name into `Compile Scriptic sources`
- *
+ * In Eclipse, issue the menu command *`Run|Open Run Dialog`* to open the dialog named *`Create, manage, and run configurations`*
+ * Double click *`Java Application`*; this creates a new configuration
+ * Change the name into *`Compile Scriptic sources`*
+ * In the *`Main`* tab, next to the entry field *`Main class`*, click the `Search...` button
+   * In the *`Select Main Type`* dialog, select *`Sawa - scriptic.tools`*, and close the dialog
+ * In the *`Arguments`* tab, specify for Program arguments: *`-o bin src/Examples/*.sawa`*
+ * In the *`Classpath`* tab, click *`User Entries`* and *then* button *`Add External JARs...`*
+   * in the dialog, select the Java runtime archive *`rt.jar`* from the Java installation of your system, e.g. in folder *`/usr/lib/jvm/jre-1.7.0-icedtea.x86_64/lib`*
+ * Click the button *`Run`* at the bottom of the *`Create, manage, and run configurations`* dialog; this should yield output in the Console panel like:
+{{{
+Scriptic/Java compiler; open source software - GNU General Public License
+
+   218 Initialized
+   274 Parsed              src/Examples/LifeFrame.sawa
+    10 Parsed              src/Examples/LookupFrame.sawa
+    12 Parsed              src/Examples/QSim.sawa
+    12 Parsed              src/Examples/LookupFrame2.sawa
+   130 Inspected           LifeFrame
+     2 Inspected           LookupFrame
+     2 Inspected           QSim
+     2 Inspected           LookupFrame2
+   105 Checked             LifeFrame
+     2 Checked             LookupFrame
+     2 Checked             QSim
+     1 Checked             LookupFrame2
+   115 Resolved            LifeFrame
+   179 Generated code      LifeFrame
+   156 Written             bin/Examples/LifeFrame.class
+    37 Resolved            LookupFrame
+    10 Generated code      LookupFrame
+    50 Written             bin/Examples/LookupFrame.class
+    31 Resolved            QSim
+    16 Generated code      QSim
+    40 Written             bin/Examples/QSim.class
+    26 Resolved            LookupFrame2
+    10 Generated code      LookupFrame2
+    15 Written             bin/Examples/LookupFrame2.class
+  1458 done
+}}}
+
+Now create run configurations for the Examples:
+ * *`QSim`* with main class *`Examples.QSim`* and arguments `1`
+ * *`LookupFrame`* with main class *`Examples.LookupFrame`*
+ * *`Life`* with main class *`Examples.LifeFrame`*
+And run these
+
