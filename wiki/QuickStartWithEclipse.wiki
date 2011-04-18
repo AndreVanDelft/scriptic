@@ -37,7 +37,7 @@ In Eclipse, issue the menu command _`File|New|Project`_ to create a new developm
    * in tab _`Libraries`_, click button _`Add External JARs...`_
      * using the _`JAR Selection`_ dialog, add from folder _`..../workspace/scriptic/lib`_ the files _`sawa.jar`_ and _`scripticvm.jar`_
 
-Using the file manager outside Eclipse, copy the folder _`Examples`_ from _`..../workspace/scriptic/`_ into folder _`..../workspace/Scriptic Demo/src`_
+Using the file manager outside Eclipse, or using the command line, copy the *folder* _`Examples`_ from _`..../workspace/scriptic/`_ into folder _`..../workspace/Scriptic Demo/src`_
 
 Create a Run Configuration for the Scriptic compiler:
  * In Eclipse, issue the menu command _`Run|Open Run Dialog`_ to open the dialog named _`Create, manage, and run configurations`_
@@ -86,3 +86,10 @@ Now create run configurations for the Examples, for project _`Scriptic Demo`_:
  * _`LookupFrame2`_ with main class _`Examples.LookupFrame2`_
  * _`Life`_ with main class _`Examples.LifeFrame`_
 Run these. 
+
+= Troubleshooting =
+Every once  in a while you may encounter  a ClassNotFoundException, when you want to execute a Scriptic program using an Eclipse run configuration. These may even occur when everything seems right on the code level.
+To solve such issues, try the following steps:
+ * Invoke the menu command {{{Project|Clean}}}
+ * Recompile the Scriptic sources
+In many cases this helps
