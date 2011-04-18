@@ -2,7 +2,7 @@
 
 = Hello World =
 
-Copy the following code into a file HelloWorld.java, in the Examples folder:
+Copy the following code into a file HelloWorld.sawa, in the Examples folder:
 {{{
 package Examples;
 
