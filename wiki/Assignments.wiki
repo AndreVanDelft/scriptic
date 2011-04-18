@@ -161,3 +161,129 @@ public class BasicBagFrame extends javax.swing.JFrame {
 	}
 }
 }}}
+
+Create a file Examples/BagFrame.java with contents
+
+{{{
+
+/* Copyright (c) 1996, Delftware Technology BV. All rights reserved.
+ * Granted to use and modify this software as long as this copyright
+ * notice is retained.
+ */
+package Examples;
+import static java.lang.Math.*;
+import static scriptic.util.Scripts.*;
+import scriptic.util.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.event.MouseEvent;
+
+public class BagFrame extends BasicBagFrame {
+
+    public boolean confirmExit() {
+        return JOptionPane.OK_OPTION
+            == JOptionPane.showConfirmDialog(this,
+                 "Are you sure?", "Click OK to exit", JOptionPane.OK_CANCEL_OPTION);
+  	}
+                            
+
+    int nA, nB;
+    
+    void refresh() {a_Label.setText(""+nA);b_Label.setText(""+nB);}
+    
+    void sleep() {try{Thread.sleep(0);} catch(Exception e){}}
+    
+    //////////////////////////////////////////////
+    public static scripts
+    //////////////////////////////////////////////
+    
+        main(String args[]) = BagFrame b = new BagFrame(): 
+                              @swing: {b.setVisible(true)}
+                            < b.live  
+                            > @swing: {b.setVisible(false)}
+        
+        
+    //////////////////////////////////////////////
+    public scripts
+    //////////////////////////////////////////////
+
+	action(JButton button) =
+		  ( AnchorActionListener a = new AnchorActionListener() : 
+			@swing: {button.addActionListener(a); button.setEnabled(true)}
+        < @a: {. a.event.getSource()!=null??; a.event.setSource(null); sleep() .}
+        > @swing: {button.removeActionListener(a);
+                   if (button.getActionListeners().length==0) {button.setEnabled(false);}}
+        )
+    
+        key(char c) = key(this, c?!)
+
+            exitCmd = windowClosing(this)  + key('x' !)
+           aPlusCmd = action( aPlusButton) + key('A' !)
+           bPlusCmd = action( bPlusButton) + key('B' !)
+          aMinusCmd = action(aMinusButton) + key('a' !)
+          bMinusCmd = action(bMinusButton) + key('b' !)
+
+     aPlus  =  aPlusCmd; @swing: {:nA++; refresh():}
+     bPlus  =  bPlusCmd; @swing: {:nB++; refresh():}
+     aMinus = aMinusCmd; @swing: {:nA--; refresh():}
+     bMinus = bMinusCmd; @swing: {:nB--; refresh():}
+          
+      bag   = aPlus; (bag&aMinus)
+            
+      exit          =  exitCmd; 
+                       boolean  doExit: 
+                       @swing: {doExit = confirmExit()}; 
+                       while (! doExit)
+
+      live          = bag
+                   || exit
+
+}
+}}}
+This is a simulation of a Bag, or Multiset. The bag has been specified using a recursive specification with parallelism.
+It can currently only hold elements "a".
+Compile and execute it.
+
+Change the script {{{bag}}} so that it can also hold elements "b".
+
+An alternative recursive specification would not use parallelism, but a parameterization instead:
+{{{
+  bag(int a, int b) = .......
+}}}
+Complete and test this approach. Do not use the variables nA and nB here; for now, these are only used to display the contents in the GUI.
+
+A third approach would be with the {{{...}}} iterator, instead of the recursion. The bag script would not be parameterized any more; create it using the variables nA and nB.
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Cheat sheet for the Bag assignments:
+{{{
+      bag   = aPlus; (bag&aMinus)
+            + bPlus; (bag&bMinus)
+            
+      bag(int a, int b) =          aPlus ; bag(a+1,b)
+                        +          bPlus ; bag(a,b+1)
+                        + if (a>0)(aMinus; bag(a-1,b))
+                        + if (b>0)(bMinus; bag(a,b-1))
+
+      bag1 = ...; ( aPlus
+    		      + bPlus 
+                  + if (nA>0)aMinus
+                  + if (nB>0)bMinus)
+}}}
