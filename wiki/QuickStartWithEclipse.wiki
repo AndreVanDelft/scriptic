@@ -33,7 +33,7 @@ In Eclipse, issue the menu command _`File|New|Project`_ to create a new developm
  * in the third page, _`Java Settings`_:
    * in tab _`Source`_, select the displayed folder _`src`_
      * click the link _`Configure inclusion and exclusion filters`_
-     * in the `Inclusion and Exclusion Patterns` dialog, enter _*exclusion*_ pattern _`_*/*.sawa`_, and click _`Finish`_ to close the dialog
+     * in the `Inclusion and Exclusion Patterns` dialog, enter _*exclusion*_ pattern _`**/*.sawa`_, and click _`Finish`_ to close the dialog
    * in tab _`Libraries`_, click button _`Add External JARs...`_
      * using the _`JAR Selection`_ dialog, add from folder _`..../workspace/scriptic/lib`_ the files _`sawa.jar`_ and _`scripticvm.jar`_
 
