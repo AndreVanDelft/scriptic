@@ -8,7 +8,7 @@ If you have the development environment Eclipse installed (available from http:/
 
 Download the Scriptic All-in-1 zip archive from http://code.google.com/p/scriptic/downloads/detail?name=scriptic-all-in-one.zip
 
-Unpack the zip archive in your Eclipse _`workspace\`_ folder, yielding there a folder hierarchy
+Unpack the zip archive in your Eclipse _`workspace`_ folder, yielding there a folder hierarchy
 {{{
   scriptic/
     dimensions
