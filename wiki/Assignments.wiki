@@ -305,34 +305,121 @@ Replace ###### by appropriate code.
 Note that communication is by calling s(int c, int i) and r(int cc, int ii). The first parameter is 
 the channel index; it is 0 for the output of the generator, and the input of the first sieve. The printer listens on channel -1.
 
+= Lifeframe improvement =
+
+The LifeFrame program may be improved.
+
+In case the canvas is empty, one may want to disable the Clear button.
+However, the canvas is affected by several kinds of actions:
+- Clear and Randomize
+- Single step and Multistep
+- Mouse operations
+
+Try some simple options to change the behaviour in the desired direction.
+Find out a good method to have the Clear button.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Cheat sheet for the Bag assignments:
 {{{
+
+
+
+
+
+
+
+
+
+
+}}}
+
+= Cheat sheet =
+Cheat sheet for the Bag and Sieve assignments.
+Don't give it up too early
+{{{
+
+
       bag   = aPlus; (bag&aMinus)
             + bPlus; (bag&bMinus)
-            
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
       bag(int a, int b) =          aPlus ; bag(a+1,b)
                         +          bPlus ; bag(a,b+1)
                         + if (a>0)(aMinus; bag(a-1,b))
                         + if (b>0)(bMinus; bag(a,b-1))
 
+
+
+
+
+
+
+
+
+
+
+
+
       bag1 = ...; ( aPlus
     		      + bPlus 
                   + if (nA>0)aMinus
                   + if (nB>0)bMinus)
+
+
+
+
+
+
+
+
+
+
+
+
+
+    main(String[] args) = generator(2,10000000) & (..&sieve(pass)) & printer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    sieve(int n) = int p: r(n,p?); s(-1, p); (int i: ..; r(n,i?); if (i%p!=0) s(n+1,i) )
+
+
+
+
+
+
+
+
+
+Hint for the LifeFrame improvement, read page 25 of "Introducing Scriptic.doc"
+
 }}}
