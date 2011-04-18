@@ -36,7 +36,7 @@ Compile and execute it.
  * Change the semicolon in show into + and thereafter &. 
  * Something will go wrong. Try to repair by declaring the loop variable private in the loop, using {{{private i:}
 
-= Bag =
+= Bag Simulation =
 
 Install the GUI painter from http://www.cloudgarden.com/jigloo/: 
 {{{
@@ -244,7 +244,15 @@ This is a simulation of a Bag, or Multiset. The bag has been specified using a r
 It can currently only hold elements "a".
 Compile and execute it.
 
+=== The overriding script "action" ===
+The script {{{action(JButton button)}}} from {{{scriptic.utils.Scripts}}} has been "overridden" here, to prevent  a single button click event to be used for all listeners. Find out what happens if you comment out this overriding definition.
+Change back again.
+
+=== Add support for elements "b" ===
+
 Change the script {{{bag}}} so that it can also hold elements "b".
+
+=== Parametrization instead of parallelism ===
 
 An alternative recursive specification would not use parallelism, but a parameterization instead:
 {{{
@@ -252,9 +260,50 @@ An alternative recursive specification would not use parallelism, but a paramete
 }}}
 Complete and test this approach. Do not use the variables nA and nB here; for now, these are only used to display the contents in the GUI.
 
-A third approach would be with the {{{...}}} iterator, instead of the recursion. The bag script would not be parameterized any more; create it using the variables nA and nB.
- 
+=== Explicit loop instead of recursion ===
 
+A third approach would be with the {{{...}}} iterator, instead of the recursion. The bag script would not be parameterized any more; create it using the variables nA and nB.
+
+= Sieve =
+
+Program the Sieve of Erastosthenes, by completing the following class:
+{{{
+
+package Examples;
+
+public class Sieve {
+	
+	static boolean doInfo = !true;
+      
+	static void show  (String s) {System.out.println(s);}
+	static void info  (String s) {if (doInfo) show(s);}
+
+        static void delay() {try{Thread.sleep(0);} catch(Exception e){}}
+	
+  public static scripts
+    
+    showNum(int i)   = {show("Found: "+i)}
+    
+    main(String[] args) = ######
+
+    generator(int start, int end) = while(pass<end-start); s(0,start+pass)
+    
+    printer      = ..; int i: r(-1, i?); showNum(i)
+    
+    sieve(int n) = ######
+    
+    s(int c, int i),
+    r(int cc, int ii) >= {? if (cc!=c) {success = Boolean.FALSE;break;}
+                            if (ii?)ii=i; else if (ii!=i) {success = Boolean.FALSE;break;}
+    	                    info("c: "+c+"-"+i); 
+                            delay()
+                         ?}  
+
+}
+}}}
+Replace ###### by appropriate code. 
+Note that communication is by calling s(int c, int i) and r(int cc, int ii). The first parameter is 
+the channel index; it is 0 for the output of the generator, and the input of the first sieve. The printer listens on channel -1.
 
 
 
