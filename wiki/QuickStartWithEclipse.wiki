@@ -21,9 +21,11 @@ Tell the Eclipse text editor that Scriptic source files are like Java source fil
  * In Eclipse, issue the menu command _`Window|Preferences`_, which makes the *Preferences* dialog appear
  * Select _`General|Workspace`_, and switch on the check box _`Refresh automatically`_
  * Select _`General|Editors|File Associations`_.
- * In the _`File Associations`_ panel, click the link _`Content Types`_.
- * In the _`Content Types`_ panel, open the map _`Text`_; click _`Java Source File`_.
+   * In the _`File Associations`_ panel, click the link _`Content Types`_.
+     * In the _`Content Types`_ panel, open the map _`Text`_; click _`Java Source File`_.
  * Add file association for file type _`*.sawa`_.
+ * Select _`General|Editors|Text Editors`_.
+   * Switch on the check box _`Insert spaces for tabs`_
 
 In Eclipse, issue the menu command _`File|New|Project`_ to create a new development project using a wizard.
  * in the first wizard page, select _`Java project`_, and go to the next page
