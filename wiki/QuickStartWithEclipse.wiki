@@ -47,7 +47,7 @@ Create a Run Configuration for the Scriptic compiler:
    * In the _`Select Main Type`_ dialog, select _`Sawa - scriptic.tools`_, and close the dialog
  * In the _`Arguments`_ tab, specify for Program arguments: _`-o bin src/Examples/*.sawa`_
  * In the _`Classpath`_ tab, click _`User Entries`_ and *then* button _`Add External JARs...`_
-   * in the dialog, select the Java runtime archive _`rt.jar`_ from the Java installation of your system, e.g. in folder _`/usr/lib/jvm/jre-1.7.0-icedtea.x86_64/lib`_
+   * in the dialog, select the Java runtime archive _`rt.jar`_ from the Java installation of your system, e.g. in folder _`/usr/lib/jvm/jre-1.7.0-icedtea.x86_64/lib`_. Note: on MacOS, the jar is probably named classes.jar
  * Click the button _`Run`_ at the bottom of the _`Create, manage, and run configurations`_ dialog; this should yield output in the Console panel like:
 {{{
 Scriptic/Java compiler; open source software - GNU General Public License
