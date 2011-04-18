@@ -34,7 +34,7 @@ public class HelloWorld {
 Compile and execute it.
  * Change the semicolons in test2 and test3 into + and &. Try again.
  * Change the semicolon in show into + and thereafter &. 
- * Something will go wrong. Try to repair by declaring the loop variable private in the loop, using {{{private i:}
+ * Something will go wrong. Try to repair by declaring the loop variable private in the loop, using {{{private i:}}}
 
 = Bag Simulation =
 
