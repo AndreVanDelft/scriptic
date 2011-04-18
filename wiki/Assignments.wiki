@@ -264,7 +264,11 @@ A third approach would be with the {{{...}}} iterator, instead of the recursion.
 
 = Sieve =
 
-Program the Sieve of Erastosthenes, by completing the following class:
+Study the specification of the Sieve of Erastosthenes, from the Subscript site: http://code.google.com/p/subscript/wiki/SieveOfErasthostenes
+
+There is no implementation for the Subscript language yet; with Scriptic you can do much of the same.
+
+Program the Sieve in Scriptic, by completing the following class:
 {{{
 
 package Examples;
@@ -300,8 +304,7 @@ public class Sieve {
 }
 }}}
 Replace ###### by appropriate code. 
-Note that communication is by calling s(int c, int i) and r(int cc, int ii). The first parameter is 
-the channel index; it is 0 for the output of the generator, and the input of the first sieve. The printer listens on channel -1.
+Note that communication is by calling s(int c, int i) and r(int cc, int ii). The first parameter is the channel index; it is 0 for the output of the generator, and the input of the first sieve. The printer listens on channel -1.
 
 = Lifeframe improvement =
 
@@ -334,6 +337,16 @@ Find out a good method to have the Clear button.
 Cheat sheet for the Bag and Sieve assignments.
 Don't give it up too early
 {{{
+
+
+
+
+
+
+
+
+
+
 
 
       bag   = aPlus; (bag&aMinus)
