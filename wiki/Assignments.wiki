@@ -160,7 +160,7 @@ public class BasicBagFrame extends javax.swing.JFrame {
 }
 }}}
 
-Create a file Examples/BagFrame.java with contents
+Create a file Examples/BagFrame.sawa with contents
 
 {{{
 
