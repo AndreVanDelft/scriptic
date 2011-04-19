@@ -38,8 +38,8 @@ Compile and execute it.
 
 = Bag Simulation =
 
-Install the GUI painter from http://www.cloudgarden.com/jigloo/: 
- * You should use the Update Manager in Eclipse to download and install Jigloo - just open it (under "Help->Software Updates->Find and Install"). You will need to create a new remote site entry in the update manager for the Jigloo update-site - the url is: http://cloudgarden1.com/update-site
+ * Optionally: install the GUI painter from http://www.cloudgarden.com/jigloo/: 
+  * You should use the Update Manager in Eclipse to download and install Jigloo - just open it (under "Help->Software Updates->Find and Install"). You will need to create a new remote site entry in the update manager for the Jigloo update-site - the url is: http://cloudgarden1.com/update-site
 
 Create a file Examples/BasicBagFrame.java with contents like:
 {{{
