@@ -264,7 +264,7 @@ A third approach would be with the {{{...}}} iterator, instead of the recursion.
 
 = Sieve =
 
-Study the specification of the Sieve of Erastosthenes, from the Subscript site: http://code.google.com/p/subscript/wiki/SieveOfErasthostenes
+Study the specification of the Sieve of Eratosthenes, from the Subscript site: http://code.google.com/p/subscript/wiki/SieveOfEratosthenes 
 
 There is no implementation for the Subscript language yet; with Scriptic you can do much of the same.
 
@@ -385,7 +385,7 @@ Don't give it up too early
 
 
       bag1 = ...; ( aPlus
-    		      + bPlus 
+                  + bPlus 
                   + if (nA>0)aMinus
                   + if (nB>0)bMinus)
 
