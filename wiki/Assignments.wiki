@@ -317,7 +317,9 @@ However, the canvas is affected by several kinds of actions:
 - Mouse operations
 
 Try some simple options to change the behaviour in the desired direction.
-Find out a good method to have the Clear button.
+
+== Second Improvement ==
+A bit more complicated maybe: at times, multistepping ends in a steady state. In such a case, it may be good to disable the Step and Stop buttons. How should the program be adapted?
 
 
 {{{
@@ -431,6 +433,8 @@ Don't give it up too early
 
 
 
-Hint for the LifeFrame improvement, read page 25 of "Introducing Scriptic.doc"
+Hint for the first LifeFrame improvement, read page 25 of "Introducing Scriptic.doc"
+
+The second LifeFrame improvement is still an open issue.
 
 }}}
