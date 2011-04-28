@@ -433,7 +433,7 @@ Don't give it up too early
 
 
 
-Hint for the first LifeFrame improvement, read page 25 of "Introducing Scriptic.doc"
+Hint for the first LifeFrame improvement, read page 23 of "Introducing Scriptic.doc"; make a guarding script like "whenSearchTextPresent"
 
 The second LifeFrame improvement is still an open issue.
 
